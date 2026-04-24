@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Pulse — Media Operations</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #1c2128; --bg4: #21262d;
+  --border: #30363d; --border2: #3d444d;
+  --acc: #2ea043; --acc2: #238636; --accL: rgba(46,160,67,.12);
+  --txt: #e6edf3; --txt2: #8b949e; --txt3: #484f58;
+  --red: #f85149; --redL: rgba(248,81,73,.12);
+  --gold: #d29922; --goldL: rgba(210,153,34,.12);
+  --blue: #388bfd; --blueL: rgba(56,139,253,.12);
+  --purple: #a371f7; --purpleL: rgba(163,113,247,.12);
+  --teal: #2dd4bf; --tealL: rgba(45,212,191,.12);
+  --orange: #f0883e; --orangeL: rgba(240,136,62,.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);display:flex;height:100vh;overflow:hidden;font-size:14px}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* SIDEBAR */
+.sidebar{width:232px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sb-logo{padding:18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sb-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--acc),#1a7f37);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sb-name{font-size:15px;font-weight:700;letter-spacing:-.3px}
+.sb-sub{font-size:10px;color:var(--txt2);text-transform:uppercase;letter-spacing:1px}
+.sb-nav{padding:10px 6px;flex:1}
+.sb-section{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--txt3);padding:10px 8px 4px;margin-top:4px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:6px;cursor:pointer;color:var(--txt2);font-size:13px;font-weight:500;transition:all .15s;margin-bottom:1px;user-select:none}
+.nav-item:hover{background:var(--bg4);color:var(--txt)}
+.nav-item.active{background:var(--accL);color:var(--acc)}
+.nav-icon{width:17px;text-align:center;font-size:14px}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px}
+.nav-badge.green{background:var(--acc2)}
+.sb-bottom{padding:12px;border-top:1px solid var(--border)}
+.user-pill{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:background .15s}
+.user-pill:hover{background:var(--bg4)}
+.user-name{font-size:13px;font-weight:600}
+.user-role{font-size:11px;color:var(--txt2)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:54px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:10px;flex-shrink:0}
+.tb-title{font-size:15px;font-weight:700}
+.tb-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+.search{display:flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 11px;width:220px}
+.search input{background:none;border:none;outline:none;color:var(--txt);font-size:13px;width:100%}
+.search input::placeholder{color:var(--txt3)}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .15s;font-family:inherit}
+.btn-p{background:var(--acc2);color:#fff}.btn-p:hover{background:var(--acc)}
+.btn-s{background:var(--bg4);color:var(--txt);border:1px solid var(--border)}.btn-s:hover{background:var(--bg3)}
+.btn-ic{width:32px;height:32px;padding:0;justify-content:center;background:var(--bg4);border:1px solid var(--border);color:var(--txt2);border-radius:6px;font-size:15px;position:relative}
+.btn-ic:hover{color:var(--txt)}
+.notif-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;background:var(--red);border-radius:50%;border:2px solid var(--bg2)}
+
+.content{flex:1;overflow-y:auto;padding:22px}
+
+/* CARDS */
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:18px}
+.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-title{font-size:13px;font-weight:600}
+.card-link{font-size:12px;color:var(--acc);cursor:pointer}
+.card-link:hover{text-decoration:underline}
+
+/* TAGS */
+.tag{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:500}
+.t-podcast{background:var(--purpleL);color:var(--purple)}
+.t-video{background:var(--redL);color:var(--red)}
+.t-live{background:rgba(248,81,73,.2);color:#ff7b72}
+.t-short{background:var(--blueL);color:var(--blue)}
+.t-news{background:var(--goldL);color:var(--gold)}
+.t-graphic{background:var(--tealL);color:var(--teal)}
+.t-quote{background:var(--orangeL);color:var(--orange)}
+.t-interview{background:var(--purpleL);color:#c9b1ff}
+.t-documentary{background:rgba(248,81,73,.15);color:#ffa198}
+
+/* PRIORITY */
+.pri-high{color:var(--red)} .pri-med{color:var(--gold)} .pri-low{color:var(--txt2)}
+
+/* AVATAR */
+.av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+
+/* STAGE DOT COLORS */
+.sd-idea{background:#6e7681} .sd-research{background:var(--blue)} .sd-brief{background:var(--purple)}
+.sd-outreach{background:var(--gold)} .sd-confirmed{background:#2dd4bf} .sd-preprod{background:var(--orange)}
+.sd-production{background:var(--red)} .sd-postprod{background:#f78166} .sd-review{background:#e3b341}
+.sd-scheduled{background:#58a6ff} .sd-published{background:var(--acc)}
+
+/* ── DASHBOARD ── */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.stat-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px}
+.stat-lbl{font-size:11px;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;font-weight:500;margin-bottom:7px}
+.stat-val{font-size:26px;font-weight:700;margin-bottom:3px}
+.stat-chg{font-size:12px;color:var(--txt2)}
+.stat-chg.up{color:var(--acc)} .stat-chg.dn{color:var(--red)}
+
+.dash-grid{display:grid;gap:14px;margin-bottom:14px}
+.dash-3{grid-template-columns:1fr 1fr 1fr}
+.dash-21{grid-template-columns:2fr 1fr}
+
+.pipe-strip{display:flex;margin-bottom:20px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.ps-stage{flex:1;padding:10px 6px;text-align:center;background:var(--bg3);cursor:pointer;transition:background .15s;border-right:1px solid var(--border)}
+.ps-stage:last-child{border-right:none}
+.ps-stage:hover{background:var(--bg4)}
+.ps-count{font-size:18px;font-weight:700}
+.ps-lbl{font-size:9px;color:var(--txt2);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+
+.act-item{display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--border)}
+.act-item:last-child{border-bottom:none}
+.act-dot{width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.act-txt{font-size:13px;color:var(--txt2);line-height:1.5}
+.act-txt strong{color:var(--txt)}
+.act-time{font-size:11px;color:var(--txt3);margin-top:2px}
+
+.upcoming-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.upcoming-item:last-child{border-bottom:none}
+.upcoming-item:hover{opacity:.8}
+.up-date{width:40px;text-align:center;flex-shrink:0}
+.up-day{font-size:18px;font-weight:700;line-height:1}
+.up-month{font-size:10px;color:var(--txt2);text-transform:uppercase}
+.up-title{font-size:13px;font-weight:500;flex:1}
+.up-meta{font-size:11px;color:var(--txt2)}
+
+/* ── PIPELINE / KANBAN ── */
+.pipe-wrap{display:flex;gap:10px;overflow-x:auto;height:calc(100vh - 110px);padding-bottom:12px}
+.k-col{flex-shrink:0;width:248px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;max-height:100%}
+.k-hd{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;flex-shrink:0}
+.k-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.k-name{font-size:12px;font-weight:600;flex:1}
+.k-cnt{background:var(--bg4);color:var(--txt2);font-size:10px;font-weight:600;padding:1px 6px;border-radius:10px}
+.k-cards{overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:7px;flex:1}
+.k-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:11px;cursor:grab;transition:all .15s;user-select:none}
+.k-card:hover{border-color:var(--acc);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.4)}
+.k-card.dragging{opacity:.4;cursor:grabbing}
+.k-card.drag-over-target{border-color:var(--acc);background:var(--accL)}
+.k-col.drag-over{border-color:var(--acc)}
+.k-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:7px}
+.k-card-title{font-size:13px;font-weight:600;line-height:1.35;flex:1;margin-right:6px}
+.k-card-bot{display:flex;align-items:center;justify-content:space-between;margin-top:9px}
+.k-avs{display:flex}
+.k-avs .av{width:20px;height:20px;font-size:8px;margin-right:-5px;border:2px solid var(--bg3)}
+.k-due{font-size:11px;color:var(--txt3)}
+.k-due.overdue{color:var(--red)} .k-due.soon{color:var(--gold)}
+.k-plats{display:flex;gap:3px;margin-top:7px;flex-wrap:wrap}
+.plat{font-size:10px;padding:1px 5px;border-radius:3px;background:var(--bg4);color:var(--txt3)}
+.k-add{margin:6px 8px 8px;padding:7px;border-radius:6px;border:1px dashed var(--border);background:none;color:var(--txt3);font-size:12px;cursor:pointer;width:calc(100% - 16px);text-align:center;transition:all .15s;font-family:inherit}
+.k-add:hover{border-color:var(--acc);color:var(--acc)}
+
+/* ── CALENDAR ── */
+.cal-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.cal-hd{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.cal-month{font-size:16px;font-weight:700;min-width:150px;text-align:center}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.cal-dh{padding:9px;text-align:center;font-size:10px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.cal-day{min-height:90px;padding:7px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.cal-day:nth-child(7n){border-right:none}
+.cal-dn{font-size:12px;font-weight:500;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:50%;margin-bottom:4px}
+.cal-dn.today{background:var(--acc2);color:#fff}
+.cal-dn.other{color:var(--txt3)}
+.cal-ev{padding:2px 5px;border-radius:3px;font-size:10px;font-weight:500;margin-bottom:2px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ce-live{background:rgba(248,81,73,.2);color:#ff7b72}
+.ce-video{background:var(--redL);color:var(--red)}
+.ce-podcast{background:var(--purpleL);color:var(--purple)}
+.ce-short{background:var(--blueL);color:var(--blue)}
+.ce-graphic{background:var(--tealL);color:var(--teal)}
+.ce-news{background:var(--goldL);color:var(--gold)}
+
+/* ── GUESTS ── */
+.guests-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:18px;cursor:pointer;transition:all .15s}
+.g-card:hover{border-color:var(--acc);transform:translateY(-1px)}
+.g-hd{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.g-av{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;flex-shrink:0}
+.g-name{font-size:14px;font-weight:600;margin-bottom:1px}
+.g-role{font-size:12px;color:var(--txt2)}
+.g-status{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:500}
+.gs-confirmed{background:var(--accL);color:var(--acc)}
+.gs-pending{background:var(--goldL);color:var(--gold)}
+.gs-outreach{background:var(--blueL);color:var(--blue)}
+.gs-declined{background:var(--redL);color:var(--red)}
+.gs-completed{background:var(--bg4);color:var(--txt2)}
+.g-row{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--txt2);margin-top:8px}
+.g-actions{display:flex;gap:7px;margin-top:14px}
+
+/* ── TEAM ── */
+.team-list{display:flex;flex-direction:column;gap:10px}
+.tm-row{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px 18px;display:flex;align-items:flex-start;gap:16px}
+.tm-info{width:160px;flex-shrink:0}
+.tm-name{font-size:14px;font-weight:600;margin-bottom:2px}
+.tm-role{font-size:12px;color:var(--txt2)}
+.tm-tasks{flex:1;display:flex;flex-direction:column;gap:5px}
+.t-item{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg4);border-radius:6px;font-size:12px}
+.t-check{width:16px;height:16px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .15s}
+.t-check:hover{border-color:var(--acc)}
+.t-check.done{background:var(--acc2);border-color:var(--acc2);color:#fff}
+.t-item.done .t-lbl{text-decoration:line-through;color:var(--txt3)}
+.t-due{margin-left:auto;font-size:11px;color:var(--txt3)}
+.t-due.urgent{color:var(--red)}
+.wl-bar{height:4px;background:var(--border);border-radius:2px;width:100px;overflow:hidden;margin-top:6px}
+.wl-fill{height:100%;border-radius:2px;transition:width .3s}
+.wl-ok{background:var(--acc)} .wl-warn{background:var(--gold)} .wl-over{background:var(--red)}
+.wl-pct{font-size:11px;color:var(--txt2);margin-top:3px}
+
+/* ── NOTIFICATIONS ── */
+.notif-composer{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:18px}
+.comp-title{font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.team-chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.tc{display:flex;align-items:center;gap:5px;padding:4px 9px;border-radius:6px;font-size:12px;cursor:pointer;border:1px solid var(--border);background:var(--bg4);color:var(--txt2);transition:all .15s}
+.tc:hover,.tc.sel{border-color:var(--acc);color:var(--acc);background:var(--accL)}
+.tc .av{width:18px;height:18px;font-size:7px}
+.notif-list{display:flex;flex-direction:column;gap:8px}
+.ni{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:13px 15px;display:flex;gap:11px;align-items:flex-start}
+.ni.unread{border-color:var(--acc2);background:var(--accL)}
+.ni-ic{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.ni-title{font-size:13px;font-weight:600;margin-bottom:2px}
+.ni-body{font-size:13px;color:var(--txt2);line-height:1.5}
+.ni-time{font-size:11px;color:var(--txt3);margin-top:3px}
+
+/* ── ANALYTICS ── */
+.an-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+.mini-chart{height:56px;display:flex;align-items:flex-end;gap:3px;margin-top:10px}
+.mb{flex:1;border-radius:2px 2px 0 0;cursor:pointer;transition:background .15s}
+.mb:hover{opacity:.8}
+.perf-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.perf-lbl{font-size:13px;width:175px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.perf-bar-bg{flex:1;height:7px;background:var(--bg4);border-radius:4px;overflow:hidden}
+.perf-bar{height:100%;border-radius:4px}
+.perf-val{font-size:12px;color:var(--txt2);width:55px;text-align:right}
+
+/* ── REPURPOSE ── */
+.rep-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.rep-card{background:var(--bg4);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;cursor:pointer;transition:all .15s}
+.rep-card:hover{border-color:var(--acc)}
+.rep-icon{font-size:24px;margin-bottom:5px}
+.rep-lbl{font-size:11px;font-weight:500}
+.rep-sub{font-size:10px;color:var(--txt3);margin-top:2px}
+
+/* ── CONTENT LIST ── */
+.cl-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.cl-row:last-child{border-bottom:none}
+.cl-row:hover{opacity:.8}
+.cl-title{font-size:13px;font-weight:500;flex:1}
+.cl-meta{font-size:12px;color:var(--txt2)}
+.filter-bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.fc{padding:5px 11px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--txt2);transition:all .15s}
+.fc:hover,.fc.active{background:var(--accL);border-color:var(--acc);color:var(--acc)}
+
+/* ── MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:999;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:26px;width:540px;max-height:82vh;overflow-y:auto;transform:translateY(-8px);transition:transform .2s}
+.overlay.open .modal{transform:translateY(0)}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.modal-title{font-size:17px;font-weight:700}
+.modal-close{background:none;border:none;color:var(--txt2);font-size:20px;cursor:pointer;padding:2px 6px;border-radius:4px}
+.modal-close:hover{color:var(--txt);background:var(--bg4)}
+.fg{margin-bottom:16px}
+.fg label{display:block;font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px}
+.fi,.fs,.fta{width:100%;background:var(--bg4);border:1px solid var(--border);border-radius:6px;padding:8px 11px;color:var(--txt);font-size:13px;outline:none;transition:border-color .15s;font-family:inherit}
+.fi:focus,.fs:focus,.fta:focus{border-color:var(--acc)}
+.fs option{background:var(--bg3)}
+.fta{height:72px;resize:vertical}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-ft{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+
+/* ── SECTION HEADER ── */
+.sec-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.sec-title{font-size:17px;font-weight:700}
+.sec-sub{font-size:13px;color:var(--txt2);margin-top:2px}
+
+/* ── CHECKLIST ── */
+.checklist{display:flex;flex-direction:column;gap:5px}
+.chk-item{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--txt2)}
+.chk-item input{accent-color:var(--acc)}
+
+/* DETAIL PANEL */
+.detail-panel{position:fixed;top:0;right:-480px;width:480px;height:100vh;background:var(--bg2);border-left:1px solid var(--border);z-index:500;transition:right .25s;overflow-y:auto;padding:24px}
+.detail-panel.open{right:0}
+.detail-close{float:right;background:none;border:none;color:var(--txt2);font-size:18px;cursor:pointer}
+.dp-stage-row{display:flex;gap:5px;flex-wrap:wrap;margin:14px 0}
+.dp-stage-btn{padding:4px 10px;border-radius:4px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--bg4);color:var(--txt2);transition:all .15s}
+.dp-stage-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--accL)}
+.dp-stage-btn.current{border-color:var(--acc2);background:var(--accL);color:var(--acc)}
+.progress-bg{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:4px}
+.progress-fill{height:100%;border-radius:3px;background:var(--acc);transition:width .3s}
+.progress-fill.warn{background:var(--gold)} .progress-fill.danger{background:var(--red)}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-icon">📡</div>
+    <div>
+      <div class="sb-name">The Pulse</div>
+      <div class="sb-sub">Media Studio</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">Command Centre</div>
+    <div class="nav-item active" data-view="dashboard"><span class="nav-icon">⚡</span>Dashboard</div>
+    <div class="nav-item" data-view="pipeline"><span class="nav-icon">🗂</span>Pipeline<span class="nav-badge green">22</span></div>
+    <div class="nav-item" data-view="calendar"><span class="nav-icon">📅</span>Calendar</div>
+    <div class="nav-item" data-view="content"><span class="nav-icon">🎬</span>All Content</div>
+    <div class="sb-section">Operations</div>
+    <div class="nav-item" data-view="guests"><span class="nav-icon">🎤</span>Guests &amp; Outreach<span class="nav-badge">3</span></div>
+    <div class="nav-item" data-view="team"><span class="nav-icon">👥</span>Team &amp; Tasks</div>
+    <div class="nav-item" data-view="notifications"><span class="nav-icon">🔔</span>Notifications<span class="nav-badge">5</span></div>
+    <div class="nav-item" data-view="repurpose"><span class="nav-icon">♻️</span>Repurpose Hub</div>
+    <div class="sb-section">Insights</div>
+    <div class="nav-item" data-view="analytics"><span class="nav-icon">📊</span>Analytics</div>
+    <div class="sb-section">Automation</div>
+    <div class="nav-item" data-view="workflow"><span class="nav-icon">⚙️</span>Workflow Rules</div>
+    <div class="nav-item" data-view="settings"><span class="nav-icon">📱</span>WhatsApp Setup</div>
+  </nav>
+  <div class="sb-bottom">
+    <div class="user-pill">
+      <div class="av" style="background:#1a7f37;color:#fff">AK</div>
+      <div>
+        <div class="user-name">Ahmed K.</div>
+        <div class="user-role">Content Director</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="topbar">
+    <div class="tb-title" id="tb-title">Dashboard</div>
+    <div class="tb-actions">
+      <div class="search">
+        <span>🔍</span>
+        <input type="text" placeholder="Search content, guests, tasks…" id="global-search">
+      </div>
+      <button class="btn btn-s" onclick="openModal('quick-add')">+ New Content</button>
+      <button class="btn-ic btn" id="notif-btn" onclick="navigate('notifications')"><span>🔔</span><span class="notif-dot"></span></button>
+    </div>
+  </header>
+  <div class="content" id="content-area"></div>
+</div>
+
+<!-- DETAIL PANEL -->
+<div class="detail-panel" id="detail-panel">
+  <button class="detail-close" onclick="closeDetail()">✕</button>
+  <div id="detail-body"></div>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal-body"></div>
+</div>
+
+<script>
+// ─── STATE ───
+const S = {
+  view: 'dashboard',
+  filter: 'all',
+  calDate: new Date(2026, 3, 1),
+  notifRecipients: [],
+  content: [
+    {id:1,title:'Gaza: Two Years On',type:'documentary',stage:'production',priority:'high',platforms:['YouTube','Facebook'],assignedTo:[0,2],dueDate:'2026-04-30',publishDate:'2026-05-10',description:'Long-form documentary on the two-year anniversary. In-field footage + expert interviews.',tags:['Palestine','Geopolitics'],checklist:[{t:'Raw footage review',d:true},{t:'Interview cuts',d:true},{t:'B-roll selection',d:false},{t:'Colour grade',d:false},{t:'Audio mix',d:false},{t:'Thumbnail design',d:false}]},
+    {id:2,title:'Ummah Pulse LIVE — April Edition',type:'live',stage:'scheduled',priority:'high',platforms:['YouTube','Facebook','Twitter'],assignedTo:[0,4],dueDate:'2026-04-28',publishDate:'2026-04-28',description:'Monthly live show covering top ummah news. Panellists confirmed.',tags:['Live','News'],checklist:[{t:'Run-of-show doc',d:true},{t:'Guest confirmations',d:true},{t:'Stream setup test',d:true},{t:'Promo graphics',d:false},{t:'Social announcements',d:false}]},
+    {id:3,title:'Weekly Ummah Wrap — Ep. 52',type:'podcast',stage:'post_prod',priority:'med',platforms:['Spotify','YouTube','Apple Podcasts'],assignedTo:[2,5],dueDate:'2026-04-24',publishDate:'2026-04-25',description:'Weekly roundup podcast. Recorded. Now in edit and audio mix.',tags:['Weekly','Podcast'],checklist:[{t:'Recording complete',d:true},{t:'Edit pass 1',d:true},{t:'Music & intros',d:false},{t:'Show notes written',d:false},{t:'Thumbnail',d:false}]},
+    {id:4,title:'The Muslim Vote: UK Elections',type:'news',stage:'research',priority:'high',platforms:['YouTube','Instagram','Twitter'],assignedTo:[1,5],dueDate:'2026-05-05',publishDate:'2026-05-12',description:'Analysis of Muslim voting patterns ahead of upcoming elections. Data-driven explainer.',tags:['Politics','UK'],checklist:[{t:'Source gathering',d:true},{t:'Data analysis',d:false},{t:'Script outline',d:false},{t:'Expert interview booked',d:false}]},
+    {id:5,title:'Islamic Finance in 60 Seconds',type:'short',stage:'scheduled',priority:'med',platforms:['Instagram','TikTok','YouTube Shorts'],assignedTo:[2,6],dueDate:'2026-04-22',publishDate:'2026-04-24',description:'Explainer short on riba-free banking. Part of Shorts series.',tags:['Finance','Education'],checklist:[{t:'Script',d:true},{t:'Filming',d:true},{t:'Edit',d:true},{t:'Captions',d:true},{t:'Schedule',d:true}]},
+    {id:6,title:'Ramadan Reflections 2027 — Series Concept',type:'video',stage:'idea',priority:'low',platforms:['YouTube'],assignedTo:[0],dueDate:'2026-07-01',publishDate:'',description:'Early ideation for 2027 Ramadan series. 30-day content plan.',tags:['Ramadan','Series'],checklist:[{t:'Series outline',d:false},{t:'Episode breakdown',d:false},{t:'Guest wishlist',d:false}]},
+    {id:7,title:'Dr. Ramadan — On Identity Quote Card',type:'quote',stage:'published',priority:'low',platforms:['Instagram','Twitter','WhatsApp'],assignedTo:[6],dueDate:'2026-04-18',publishDate:'2026-04-19',description:'Powerful quote on Muslim identity in the West. Branded graphic.',tags:['Quote','Identity'],checklist:[{t:'Quote selected',d:true},{t:'Design',d:true},{t:'Published',d:true}]},
+    {id:8,title:'AI and the Future of Islam ft. Mufti Menk',type:'interview',stage:'guest_outreach',priority:'high',platforms:['YouTube','Spotify'],assignedTo:[0,5],dueDate:'2026-05-20',publishDate:'2026-05-28',description:'Deep-dive interview on AI ethics from Islamic perspective. Mufti Menk outreach sent.',tags:['Technology','Scholars'],checklist:[{t:'Topic brief drafted',d:true},{t:'Outreach email sent',d:true},{t:'Follow-up sent',d:false},{t:'Date confirmed',d:false},{t:'Pre-interview brief',d:false}]},
+    {id:9,title:'Palestine: Humanitarian Crisis — Expert Panel',type:'live',stage:'pre_prod',priority:'high',platforms:['YouTube','Facebook'],assignedTo:[0,4,5],dueDate:'2026-05-02',publishDate:'2026-05-05',description:'Live panel with 3 expert guests on the humanitarian situation. Pre-production underway.',tags:['Palestine','Panel'],checklist:[{t:'Guest list finalised',d:true},{t:'Questions drafted',d:true},{t:'Tech setup',d:false},{t:'Promo campaign',d:false},{t:'Run-of-show',d:false}]},
+    {id:10,title:'Decolonising Muslim Minds',type:'podcast',stage:'guest_outreach',priority:'med',platforms:['Spotify','Apple Podcasts','YouTube'],assignedTo:[5,0],dueDate:'2026-05-15',publishDate:'2026-05-22',description:'Long-form discussion on postcolonial Islamic thought. Target guest: Dr. Reza Pankhurst.',tags:['Decolonisation','Scholarship'],checklist:[{t:'Topic outline',d:true},{t:'Guest shortlist',d:true},{t:'Outreach sent',d:false}]},
+    {id:11,title:'10 Muslim Habits in 60s — Series',type:'short',stage:'brief',priority:'med',platforms:['TikTok','Instagram','YouTube Shorts'],assignedTo:[5,6],dueDate:'2026-04-28',publishDate:'2026-05-01',description:'Series of 10 short-form videos. Scripts in progress.',tags:['Lifestyle','Shorts'],checklist:[{t:'Series concept approved',d:true},{t:'Script episode 1-3',d:true},{t:'Script episode 4-10',d:false},{t:'Filming schedule',d:false}]},
+    {id:12,title:'Community Spotlight: Masjid Al-Noor',type:'video',stage:'idea',priority:'low',platforms:['YouTube','Facebook'],assignedTo:[0],dueDate:'2026-06-01',publishDate:'',description:'Feature on the work of Masjid Al-Noor community centre.',tags:['Community','UK'],checklist:[{t:'Initial contact',d:false},{t:'Story angle',d:false},{t:'Filming date',d:false}]},
+    {id:13,title:'Islamophobia in the Workplace — Documentary',type:'documentary',stage:'research',priority:'med',platforms:['YouTube'],assignedTo:[1,0],dueDate:'2026-05-30',publishDate:'2026-06-15',description:'Documentary exploring lived experiences of workplace Islamophobia. Research phase.',tags:['Islamophobia','Documentary'],checklist:[{t:'Case study interviews sourced',d:false},{t:'Legal review',d:false},{t:'Expert commentators',d:false}]},
+    {id:14,title:'Weekly Ummah Update — 22 April',type:'news',stage:'post_prod',priority:'high',platforms:['YouTube','Facebook','Twitter'],assignedTo:[2,1],dueDate:'2026-04-23',publishDate:'2026-04-23',description:'Breaking weekly news package. Filming complete. In final edit.',tags:['Weekly','News'],checklist:[{t:'News gathering',d:true},{t:'Script',d:true},{t:'Recording',d:true},{t:'Edit',d:false},{t:'Graphics',d:false},{t:'Captions',d:false}]},
+    {id:15,title:'5 Pillars of Success — Short',type:'short',stage:'review',priority:'med',platforms:['Instagram','TikTok'],assignedTo:[2,6],dueDate:'2026-04-24',publishDate:'2026-04-26',description:'Edited and ready for review. Awaiting content director sign-off.',tags:['Lifestyle','Motivation'],checklist:[{t:'Filmed',d:true},{t:'Edited',d:true},{t:'Captions',d:true},{t:'Director review',d:false},{t:'Final approve',d:false}]},
+    {id:16,title:'Understanding Hadith Sciences ft. Sheikh Yasir Qadhi',type:'interview',stage:'guest_outreach',priority:'high',platforms:['YouTube','Spotify'],assignedTo:[5,0],dueDate:'2026-05-25',publishDate:'2026-06-01',description:'Deep scholarly discussion on Hadith authentication. Sheikh Yasir outreach pending reply.',tags:['Scholarship','Education'],checklist:[{t:'Topic brief',d:true},{t:'Outreach sent',d:true},{t:'Reply received',d:false}]},
+    {id:17,title:'The Economics of Zakat',type:'video',stage:'pre_prod',priority:'med',platforms:['YouTube','Facebook'],assignedTo:[5,6],dueDate:'2026-05-10',publishDate:'2026-05-17',description:'Explainer on how zakat works economically. Script complete, set design in progress.',tags:['Finance','Education'],checklist:[{t:'Script approved',d:true},{t:'Graphics brief',d:true},{t:'Filming location',d:false},{t:'Presenter prep',d:false}]},
+    {id:18,title:'The Rise of Islamic Finance',type:'video',stage:'post_prod',priority:'med',platforms:['YouTube'],assignedTo:[2,6],dueDate:'2026-04-26',publishDate:'2026-04-30',description:'25-minute explainer. Edit in progress, graphics being added.',tags:['Finance','Education'],checklist:[{t:'Edit rough cut',d:true},{t:'Graphics & lower thirds',d:false},{t:'Music',d:false},{t:'Thumbnail',d:false},{t:'Description & SEO',d:false}]},
+    {id:19,title:'Islamic Parenting in the Digital Age',type:'podcast',stage:'idea',priority:'low',platforms:['Spotify','Apple Podcasts'],assignedTo:[0],dueDate:'2026-07-01',publishDate:'',description:'Exploring how Muslim parents navigate raising children with technology.',tags:['Parenting','Technology'],checklist:[{t:'Concept note',d:false},{t:'Guest ideas',d:false}]},
+    {id:20,title:'Ummah Pulse LIVE — May Edition',type:'live',stage:'pre_prod',priority:'med',platforms:['YouTube','Facebook'],assignedTo:[0,4],dueDate:'2026-05-25',publishDate:'2026-05-28',description:'Planning phase for May live show. Guest slots open.',tags:['Live','Monthly'],checklist:[{t:'Date confirmed',d:true},{t:'Topic brief',d:false},{t:'Guest invitations',d:false},{t:'Promo timeline',d:false}]},
+    {id:21,title:'Weekly Ummah Wrap — Ep. 51',type:'podcast',stage:'published',priority:'low',platforms:['Spotify','YouTube'],assignedTo:[2],dueDate:'2026-04-18',publishDate:'2026-04-18',description:'Published. 4,200 streams in first 48 hours.',tags:['Weekly','Podcast'],checklist:[{t:'All done',d:true}]},
+    {id:22,title:'Ramadan Reflections 2026 — Ep. 30',type:'video',stage:'published',priority:'low',platforms:['YouTube','Facebook'],assignedTo:[2,6],dueDate:'2026-03-30',publishDate:'2026-04-01',description:'Final episode of Ramadan 2026 series. 38k views.',tags:['Ramadan'],checklist:[{t:'All done',d:true}]}
+  ],
+  guests: [
+    {id:0,name:'Mufti Ismail Menk',role:'Islamic Scholar & Speaker',expertise:'Personal Development, Spirituality',status:'outreach',email:'contact@muftimenk.com',outreach:2,lastContact:'2026-04-18',scheduledDate:'',notes:'Huge following. Sent intro + topic brief. Awaiting reply.',colors:['#1a7f37','#fff'],topic:'AI and the Future of Islam'},
+    {id:1,name:'Dr. Shabir Ally',role:'Islamic Scholar, Let the Quran Speak',expertise:'Quran, Comparative Religion',status:'confirmed',email:'info@letsquranspeak.com',outreach:3,lastContact:'2026-04-15',scheduledDate:'2026-05-10',notes:'Confirmed for May 10. Pre-interview brief sent.',colors:['#388bfd','#fff'],topic:'Quran in the Modern World'},
+    {id:2,name:'Sheikh Dr. Yasir Qadhi',role:'Dean, Memphis Islamic Center',expertise:'Hadith, Aqeedah, Fiqh',status:'pending',email:'islamiconlineu@gmail.com',outreach:1,lastContact:'2026-04-19',scheduledDate:'',notes:'Outreach sent. No reply yet. Follow up scheduled Apr 25.',colors:['#a371f7','#fff'],topic:'Understanding Hadith Sciences'},
+    {id:3,name:'Dilly Hussain',role:'Deputy Editor, 5Pillars News',expertise:'Politics, Media, Muslim Affairs',status:'confirmed',email:'dilly@5pillars.net',outreach:1,lastContact:'2026-04-20',scheduledDate:'2026-04-28',notes:'Confirmed for the April Live show panel. Regular contributor.',colors:['#d29922','#fff'],topic:'Live Panel — April Edition'},
+    {id:4,name:'Dr. Haifaa Younis',role:'Founder, Jannah Institute',expertise:"Women in Islam, Spirituality",status:'completed',email:'contact@jannahinstitute.org',outreach:2,lastContact:'2026-04-05',scheduledDate:'2026-04-05',notes:'Excellent episode. 12k views in first week. Invite back for series.',colors:['#2dd4bf','#fff'],topic:'Women of the Quran Series'},
+    {id:5,name:'Imam Tom Facchine',role:'Scholar, Yaqeen Institute',expertise:'Convert Experience, Theology',status:'pending',email:'tom@yaqeeninstitute.org',outreach:3,lastContact:'2026-04-17',scheduledDate:'',notes:'Third outreach sent. Very interested but scheduling difficult.',colors:['#f0883e','#fff'],topic:'Converts & Community'},
+    {id:6,name:'Dr. Reza Pankhurst',role:'Academic & Political Analyst',expertise:'Islamism, Decolonisation, History',status:'outreach',email:'dr.pankhurst@gmail.com',outreach:1,lastContact:'2026-04-20',scheduledDate:'',notes:'Initial outreach sent yesterday. Excellent fit for Decolonisation episode.',colors:['#f85149','#fff'],topic:'Decolonising Muslim Minds'},
+    {id:7,name:'Roshan Muhammed Salih',role:'Journalist & Filmmaker',expertise:'Palestine, Media, Journalism',status:'declined',email:'roshan@presstv.com',outreach:2,lastContact:'2026-04-10',scheduledDate:'',notes:'Declined for now — schedule conflict. Asked to revisit in June.',colors:['#6e7681','#fff'],topic:'Palestine Documentary'}
+  ],
+  team: [
+    {id:0,name:'Ahmed Khan',role:'Content Director',initials:'AK',color:'#1a7f37',workload:85,phone:'',waKey:'',tasks:[{t:'Approve "5 Pillars" short',d:false,due:'Today',urgent:true},{t:'Review Palestine panel run-of-show',d:false,due:'Apr 24',urgent:false},{t:'Monthly content strategy meeting',d:true,due:'Apr 20',urgent:false},{t:'Sign off April Live guests',d:true,due:'Apr 19',urgent:false}]},
+    {id:1,name:'Fatima Al-Rashid',role:'Research Lead',initials:'FA',color:'#388bfd',phone:'',waKey:'',workload:70,tasks:[{t:'UK Muslim Vote data analysis',d:false,due:'Apr 28',urgent:false},{t:'Source Islamophobia case studies',d:false,due:'May 5',urgent:false},{t:'Research brief: Hadith Sciences',d:true,due:'Apr 18',urgent:false}]},
+    {id:2,name:'Ibrahim Osman',role:'Video Editor',initials:'IO',color:'#a371f7',phone:'',waKey:'',workload:95,tasks:[{t:'Finish Ep.52 podcast edit',d:false,due:'Apr 23',urgent:true},{t:'Complete Apr 22 news edit',d:false,due:'Today',urgent:true},{t:'Islamic Finance rough cut review',d:false,due:'Apr 25',urgent:false},{t:'Gaza doc — interview sync',d:true,due:'Apr 19',urgent:false}]},
+    {id:3,name:'Mariam Siddique',role:'Social Media Manager',initials:'MS',color:'#2dd4bf',phone:'',waKey:'',workload:60,tasks:[{t:'Schedule Apr 24 Islamic Finance Short',d:false,due:'Today',urgent:true},{t:'Create April Live promo graphics',d:false,due:'Apr 24',urgent:false},{t:'WhatsApp broadcast — Weekly Update',d:false,due:'Apr 23',urgent:false},{t:'Instagram story sequence — live show',d:true,due:'Apr 21',urgent:false}]},
+    {id:4,name:'Yusuf Abdalla',role:'Scriptwriter & Presenter',initials:'YA',color:'#f0883e',phone:'',waKey:'',workload:75,tasks:[{t:'Script episodes 4-7: 10 Habits series',d:false,due:'Apr 26',urgent:false},{t:'Palestine panel questions',d:false,due:'Apr 25',urgent:false},{t:'Presenter prep — Economics of Zakat',d:true,due:'Apr 19',urgent:false}]},
+    {id:5,name:'Aisha Karimi',role:'Guest Relations & Producer',initials:'AKR',color:'#d29922',phone:'',waKey:'',workload:65,tasks:[{t:'Follow up Mufti Menk — 2nd reminder',d:false,due:'Today',urgent:true},{t:'Send pre-interview brief to Dr. Shabir',d:false,due:'Apr 23',urgent:false},{t:'Book venue for Gaza panel',d:false,due:'Apr 25',urgent:false},{t:'Confirm Dilly Hussain for Live show',d:true,due:'Apr 20',urgent:false}]},
+    {id:6,name:'Bilal Hassan',role:'Graphic Designer',initials:'BH',color:'#f85149',phone:'',waKey:'',workload:80,tasks:[{t:'April Live promo pack (5 assets)',d:false,due:'Apr 24',urgent:true},{t:'Islamic Finance thumbnail',d:false,due:'Apr 25',urgent:false},{t:'Short: 5 Pillars end card',d:true,due:'Apr 21',urgent:false},{t:'10 Habits series motion template',d:false,due:'Apr 28',urgent:false}]}
+  ],
+  notifications: [
+    {id:0,read:false,type:'deadline',icon:'⏰',bg:'#redL',title:'Deadline Today: Islamic Finance Short',body:'Ibrahim — the Islamic Finance in 60s short needs to be published by 6pm today. Please confirm it\'s live.',time:'10 minutes ago',target:['Ibrahim Osman']},
+    {id:1,read:false,type:'guest',icon:'📧',bg:'',title:'Follow-Up Reminder: Mufti Menk',body:'Aisha — 7 days since initial outreach to Mufti Menk. Send a polite follow-up today.',time:'1 hour ago',target:['Aisha Karimi']},
+    {id:2,read:false,type:'review',icon:'👁',bg:'',title:'Ready for Review: 5 Pillars Short',body:'Ahmed — the 5 Pillars of Success short has been edited and is waiting your approval before publishing.',time:'2 hours ago',target:['Ahmed Khan']},
+    {id:3,read:false,type:'task',icon:'📋',bg:'',title:'April Live: Promo Graphics Needed',body:'Bilal — the April 28 Live Show promo pack (thumbnail, story, tweet card) is needed by Apr 24.',time:'3 hours ago',target:['Bilal Hassan']},
+    {id:4,read:false,type:'publish',icon:'🚀',bg:'',title:'Scheduled for Tomorrow: Weekly Wrap Ep.52',body:'Team — Podcast Ep.52 is scheduled for Apr 25. Ibrahim please finalise the edit by midnight.',time:'5 hours ago',target:['Ibrahim Osman','Mariam Siddique']},
+    {id:5,read:true,type:'guest',icon:'✅',bg:'',title:'Dr. Shabir Ally Confirmed',body:'Aisha has confirmed Dr. Shabir Ally for May 10. Pre-interview brief now needs to be sent.',time:'Yesterday',target:['Aisha Karimi','Ahmed Khan']},
+    {id:6,read:true,type:'analytics',icon:'📈',bg:'',title:'Ep.51 Performance: 4,200 streams',body:'Weekly Wrap Ep.51 hit 4,200 streams in 48 hours — our best podcast performance this month.',time:'2 days ago',target:['Ahmed Khan']},
+    {id:7,read:true,type:'task',icon:'🎬',bg:'',title:'Gaza Doc: Interview Sync Complete',body:'Ibrahim has completed the interview sync pass for the Gaza documentary. Next: B-roll selection.',time:'3 days ago',target:['Ahmed Khan']},
+    {id:8,read:true,type:'publish',icon:'🚀',bg:'',title:'Published: Dr. Ramadan Quote Card',body:'Mariam published the Dr. Ramadan quote card. Already 847 shares on Instagram.',time:'3 days ago',target:['Mariam Siddique']},
+    {id:9,read:true,type:'guest',icon:'❌',bg:'',title:'Roshan Salih Declined',body:'Roshan Muhammed Salih has declined for the Palestine documentary slot due to scheduling. Marked for June retry.',time:'4 days ago',target:['Aisha Karimi','Ahmed Khan']}
+  ],
+  analyticsData: {
+    weeks: ['Feb 2','Feb 9','Feb 16','Feb 23','Mar 2','Mar 9','Mar 16','Mar 23','Mar 30','Apr 6','Apr 13','Apr 20'],
+    views: [18400,21200,19800,24600,22100,28400,31200,29800,35600,33200,41800,38900],
+    watchTime: [1240,1480,1310,1720,1560,1980,2240,2110,2560,2390,3020,2840],
+    subs: [12200,12480,12710,13100,13380,13820,14350,14780,15320,15690,16450,17120],
+    topContent: [
+      {title:'Gaza: Expert Analysis',views:38200,type:'video'},
+      {title:'Ramadan Reflections Ep.30',views:28400,type:'video'},
+      {title:'Weekly Wrap Ep.51',views:21800,type:'podcast'},
+      {title:'Islamic Finance in 60s',views:19400,type:'short'},
+      {title:'Muslim Vote Analysis',views:15200,type:'news'},
+      {title:'Dr. Ramadan Quote',views:12800,type:'graphic'}
+    ],
+    byPlatform: [
+      {platform:'YouTube',pct:52,color:'#f85149'},
+      {platform:'Spotify/Podcast',pct:21,color:'#a371f7'},
+      {platform:'Instagram',pct:14,color:'#f0883e'},
+      {platform:'TikTok',pct:8,color:'#2dd4bf'},
+      {platform:'Facebook',pct:5,color:'#388bfd'}
+    ],
+    byType: [
+      {type:'Long-form Video',pct:45,color:'#f85149'},
+      {type:'Podcast',pct:25,color:'#a371f7'},
+      {type:'Short / Reel',pct:15,color:'#388bfd'},
+      {type:'Live Show',pct:10,color:'#d29922'},
+      {type:'Graphics',pct:5,color:'#2dd4bf'}
+    ]
+  },
+  waLog: [],
+  workflowRules: [
+    {id:1,active:true,name:'Idea Approved → Assign Researcher',fromStage:'idea',toStage:'research',notifyIds:[1],contentTypes:['all'],message:'📋 *New content approved for research*\n\n*{{title}}*\n\nPlease start the research brief and report back when done. JazakAllah khair 🤍'},
+    {id:2,active:true,name:'Research Done → Scriptwriter',fromStage:'research',toStage:'brief',notifyIds:[4],contentTypes:['all'],message:'✅ *Research complete — script needed*\n\n*{{title}}*\n\nResearch is done. Please write the script/brief. Tag me when ready for review.'},
+    {id:3,active:true,name:'Script Ready → Guest Outreach',fromStage:'brief',toStage:'guest_outreach',notifyIds:[5],contentTypes:['interview','podcast','live'],message:'🎤 *Script approved — begin guest outreach*\n\n*{{title}}*\n\nScript is signed off. Please reach out to the guest(s) and confirm a date.'},
+    {id:4,active:true,name:'Guest Confirmed → Pre-Production',fromStage:'guest_outreach',toStage:'pre_prod',notifyIds:[0,4],contentTypes:['all'],message:'✅ *Guest confirmed — start pre-production*\n\n*{{title}}*\n\nGuest is locked in. Please begin pre-production planning (run-of-show, tech, promo timeline).'},
+    {id:5,active:true,name:'Pre-Production Done → Record',fromStage:'pre_prod',toStage:'production',notifyIds:[4],contentTypes:['all'],message:'🎬 *Pre-production complete — ready to record*\n\n*{{title}}*\n\nEverything is prepped. Please schedule and confirm the recording/filming session.'},
+    {id:6,active:true,name:'Recording Done → Editor',fromStage:'production',toStage:'post_prod',notifyIds:[2],contentTypes:['all'],message:'✂️ *Recording complete — edit queue*\n\n*{{title}}*\n\nFootage/audio is in the shared folder. Please begin the edit. Due date is in the pipeline.'},
+    {id:7,active:true,name:'Edit Done → Director Review',fromStage:'post_prod',toStage:'review',notifyIds:[0],contentTypes:['all'],message:'👁 *Edit ready for your review*\n\n*{{title}}*\n\nEdit is complete. Please review and either approve or send back notes. We need sign-off before scheduling.'},
+    {id:8,active:true,name:'Approved → Social Media',fromStage:'review',toStage:'scheduled',notifyIds:[3,6],contentTypes:['all'],message:'🚀 *Content approved — schedule & graphics*\n\n*{{title}}*\n\nDirector has approved. Please schedule the publish and create the promo graphics pack (thumbnail, story, tweet card).'},
+    {id:9,active:true,name:'Published → All Team',fromStage:'scheduled',toStage:'published',notifyIds:[0,1,2,3,4,5,6],contentTypes:['all'],message:'🎉 *We are LIVE!*\n\n*{{title}}* is now published!\n\nPlease share on your personal socials and WhatsApp groups. Barakallahu feekum team — great work! 💚'}
+  ]
+};
+
+// ─── HELPERS ───
+const stages = [
+  {id:'idea',label:'Idea',dot:'sd-idea'},
+  {id:'research',label:'Research',dot:'sd-research'},
+  {id:'brief',label:'Brief / Script',dot:'sd-brief'},
+  {id:'guest_outreach',label:'Guest Outreach',dot:'sd-outreach'},
+  {id:'pre_prod',label:'Pre-Production',dot:'sd-preprod'},
+  {id:'production',label:'Production',dot:'sd-production'},
+  {id:'post_prod',label:'Post-Production',dot:'sd-postprod'},
+  {id:'review',label:'Review',dot:'sd-review'},
+  {id:'scheduled',label:'Scheduled',dot:'sd-scheduled'},
+  {id:'published',label:'Published',dot:'sd-published'}
+];
+const stageIdx = Object.fromEntries(stages.map((s,i)=>[s.id,i]));
+const typeClass = {podcast:'t-podcast',video:'t-video',live:'t-live',short:'t-short',news:'t-news',graphic:'t-graphic',quote:'t-quote',interview:'t-interview',documentary:'t-documentary'};
+const typeEmoji = {podcast:'🎙️',video:'🎬',live:'📺',short:'⚡',news:'📰',graphic:'🖼️',quote:'💬',interview:'🎤',documentary:'🎥'};
+
+function tagHTML(type){return `<span class="tag ${typeClass[type]||'t-news'}">${typeEmoji[type]||'📄'} ${type}</span>`;}
+function av(m,size=''){return `<div class="av" style="background:${m.color};color:#fff;${size?`width:${size}px;height:${size}px;font-size:${Math.round(size*.35)}px`:''}">${m.initials}</div>`;}
+function avById(id,size=''){return id!=null&&S.team[id]?av(S.team[id],size):'';}
+function fmtDate(d){if(!d)return '';const dt=new Date(d);return dt.toLocaleDateString('en-GB',{day:'numeric',month:'short'});}
+function daysTo(d){if(!d)return 999;return Math.ceil((new Date(d)-new Date())/86400000);}
+function dueCls(d){const n=daysTo(d);if(n<0)return 'overdue';if(n<=2)return 'soon';return '';}
+
+function stageCount(stageId){return S.content.filter(c=>c.stage===stageId).length;}
+
+// ─── NAVIGATE ───
+function navigate(v){
+  S.view=v;
+  document.querySelectorAll('.nav-item').forEach(el=>{
+    el.classList.toggle('active',el.dataset.view===v);
+  });
+  const titles={dashboard:'Dashboard ⚡',pipeline:'Content Pipeline',calendar:'Content Calendar',content:'All Content',guests:'Guests & Outreach',team:'Team & Tasks',notifications:'Notifications',repurpose:'Repurpose Hub',analytics:'Analytics',workflow:'Workflow Automation ⚙️',settings:'WhatsApp Setup 📱'};
+  document.getElementById('tb-title').textContent=titles[v]||v;
+  closeDetail();
+  render();
+}
+
+// ─── RENDER DISPATCH ───
+function render(){
+  const el=document.getElementById('content-area');
+  const views={dashboard:renderDashboard,pipeline:renderPipeline,calendar:renderCalendar,content:renderContent,guests:renderGuests,team:renderTeam,notifications:renderNotifications,repurpose:renderRepurpose,analytics:renderAnalytics,workflow:renderWorkflow,settings:renderSettings};
+  el.innerHTML=(views[S.view]||renderDashboard)();
+  afterRender();
+}
+
+function afterRender(){
+  if(S.view==='pipeline')initDragDrop();
+}
+
+// ─── DASHBOARD ───
+function renderDashboard(){
+  const published=S.content.filter(c=>c.stage==='published').length;
+  const inProd=S.content.filter(c=>!['published','idea'].includes(c.stage)).length;
+  const dueThisWeek=S.content.filter(c=>c.dueDate&&daysTo(c.dueDate)<=7&&c.dueDate&&c.stage!=='published').length;
+  const pendingGuests=S.guests.filter(g=>g.status==='pending'||g.status==='outreach').length;
+
+  const upcoming=S.content.filter(c=>c.publishDate&&daysTo(c.publishDate)>=0&&daysTo(c.publishDate)<=14&&c.stage!=='published').sort((a,b)=>new Date(a.publishDate)-new Date(b.publishDate)).slice(0,5);
+
+  const recentActs=[
+    {dot:'#2ea043',text:'<strong>Ibrahim</strong> moved "Gaza Doc" to Production stage',time:'12 mins ago'},
+    {dot:'#388bfd',text:'<strong>Aisha</strong> sent follow-up to Mufti Menk',time:'1 hour ago'},
+    {dot:'#a371f7',text:'<strong>Bilal</strong> uploaded 5 Pillars end card design',time:'2 hours ago'},
+    {dot:'#d29922',text:'<strong>Dr. Shabir Ally</strong> confirmed for May 10',time:'Yesterday'},
+    {dot:'#f85149',text:'<strong>Mariam</strong> published Dr. Ramadan quote — 847 shares',time:'3 days ago'},
+    {dot:'#2dd4bf',text:'<strong>Yusuf</strong> completed scripts for 10 Habits episodes 1-3',time:'3 days ago'},
+  ];
+
+  return `
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-lbl">Content in Pipeline</div><div class="stat-val">${inProd}</div><div class="stat-chg up">↑ 3 from last week</div></div>
+    <div class="stat-card"><div class="stat-lbl">Published This Month</div><div class="stat-val">${published}</div><div class="stat-chg up">↑ 2 vs target</div></div>
+    <div class="stat-card"><div class="stat-lbl">Due This Week</div><div class="stat-val" style="color:${dueThisWeek>3?'var(--red)':'inherit'}">${dueThisWeek}</div><div class="stat-chg ${dueThisWeek>4?'dn':''}">Across all content types</div></div>
+    <div class="stat-card"><div class="stat-lbl">Guests Pending Reply</div><div class="stat-val" style="color:var(--gold)">${pendingGuests}</div><div class="stat-chg">Outreach + awaiting confirmation</div></div>
+  </div>
+
+  <div class="pipe-strip">
+    ${stages.map(s=>`<div class="ps-stage" onclick="navigate('pipeline')"><div class="ps-count">${stageCount(s.id)}</div><div class="ps-lbl">${s.label}</div></div>`).join('')}
+  </div>
+
+  <div class="dash-grid dash-21">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">🗓 Upcoming Publishes</div><span class="card-link" onclick="navigate('calendar')">View calendar →</span></div>
+      ${upcoming.map(c=>`
+        <div class="upcoming-item" onclick="showDetail(${c.id})">
+          <div class="up-date"><div class="up-day">${new Date(c.publishDate).getDate()}</div><div class="up-month">${new Date(c.publishDate).toLocaleString('en',{month:'short'})}</div></div>
+          ${tagHTML(c.type)}
+          <div class="up-title">${c.title}</div>
+          <div class="up-meta">${c.platforms[0]}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card">
+        <div class="card-hd"><div class="card-title">📡 Live Activity</div></div>
+        ${recentActs.map(a=>`<div class="act-item"><div class="act-dot" style="background:${a.dot}"></div><div><div class="act-txt">${a.text}</div><div class="act-time">${a.time}</div></div></div>`).join('')}
+      </div>
+    </div>
+  </div>
+
+  <div class="dash-grid dash-3">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">🔴 Overdue / At Risk</div><span class="card-link" onclick="navigate('pipeline')">View pipeline →</span></div>
+      ${S.content.filter(c=>c.dueDate&&daysTo(c.dueDate)<0&&c.stage!=='published').map(c=>`
+        <div class="cl-row" onclick="showDetail(${c.id})">${tagHTML(c.type)}<div class="cl-title">${c.title}</div><div class="cl-meta" style="color:var(--red)">${fmtDate(c.dueDate)}</div></div>
+      `).join('')||'<div style="color:var(--txt2);font-size:13px;padding:8px 0">✅ Nothing overdue</div>'}
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">👥 Team Capacity</div><span class="card-link" onclick="navigate('team')">View team →</span></div>
+      ${S.team.map(m=>`
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          ${av(m)}
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:500">${m.name.split(' ')[0]}</div>
+            <div class="wl-bar"><div class="wl-fill ${m.workload>90?'wl-over':m.workload>75?'wl-warn':'wl-ok'}" style="width:${m.workload}%"></div></div>
+          </div>
+          <div style="font-size:11px;color:${m.workload>90?'var(--red)':m.workload>75?'var(--gold)':'var(--txt2)'}">${m.workload}%</div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">🎤 Guest Status</div><span class="card-link" onclick="navigate('guests')">View all →</span></div>
+      ${S.guests.map(g=>`
+        <div class="cl-row" onclick="navigate('guests')">
+          <div class="av" style="background:${g.colors[0]};color:#fff;width:26px;height:26px;font-size:10px">${g.name.split(' ').map(n=>n[0]).join('').slice(0,2)}</div>
+          <div class="cl-title" style="font-size:12px">${g.name}</div>
+          <span class="g-status gs-${g.status}">${g.status}</span>
+        </div>
+      `).join('')}
+    </div>
+  </div>`;
+}
+
+// ─── PIPELINE ───
+function renderPipeline(){
+  return `<div class="pipe-wrap" id="kanban-board">
+    ${stages.map(s=>{
+      const cards=S.content.filter(c=>c.stage===s.id);
+      return `
+      <div class="k-col" data-stage="${s.id}">
+        <div class="k-hd">
+          <div class="k-dot ${s.dot}"></div>
+          <div class="k-name">${s.label}</div>
+          <div class="k-cnt">${cards.length}</div>
+        </div>
+        <div class="k-cards" data-stage="${s.id}">
+          ${cards.map(c=>kanbanCard(c)).join('')}
+        </div>
+        <button class="k-add" onclick="openModal('add-content','${s.id}')">+ Add</button>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+function kanbanCard(c){
+  const avs=c.assignedTo.map(id=>avById(id,20)).join('');
+  const dc=dueCls(c.dueDate);
+  return `<div class="k-card" draggable="true" data-id="${c.id}" onclick="showDetail(${c.id})">
+    <div class="k-card-top">
+      <div class="k-card-title">${c.title}</div>
+      <span class="tag ${typeClass[c.type]||''}" style="font-size:10px">${typeEmoji[c.type]}</span>
+    </div>
+    <div class="k-plats">${c.platforms.slice(0,3).map(p=>`<span class="plat">${p}</span>`).join('')}</div>
+    <div class="k-card-bot">
+      <div class="k-avs">${avs}</div>
+      ${c.dueDate?`<div class="k-due ${dc}">${dc==='overdue'?'⚠️ ':dc==='soon'?'🟡 ':''}${fmtDate(c.dueDate)}</div>`:''}
+    </div>
+    <div style="margin-top:7px;display:flex;align-items:center;gap:6px">
+      <div style="font-size:10px;color:${c.priority==='high'?'var(--red)':c.priority==='med'?'var(--gold)':'var(--txt3)'}">● ${c.priority} priority</div>
+      <div style="margin-left:auto;font-size:10px;color:var(--txt3)">${c.checklist.filter(t=>t.d).length}/${c.checklist.length} tasks</div>
+    </div>
+    <div class="progress-bg"><div class="progress-fill ${c.checklist.filter(t=>t.d).length/c.checklist.length<.4?'danger':c.checklist.filter(t=>t.d).length/c.checklist.length<.7?'warn':''}" style="width:${Math.round(c.checklist.filter(t=>t.d).length/c.checklist.length*100)}%"></div></div>
+  </div>`;
+}
+
+// ─── DRAG & DROP ───
+function initDragDrop(){
+  let dragging=null;
+  document.querySelectorAll('.k-card').forEach(card=>{
+    card.addEventListener('dragstart',e=>{dragging=card;card.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+    card.addEventListener('dragend',()=>{dragging=null;card.classList.remove('dragging');document.querySelectorAll('.k-col').forEach(c=>c.classList.remove('drag-over'));});
+  });
+  document.querySelectorAll('.k-col').forEach(col=>{
+    col.addEventListener('dragover',e=>{e.preventDefault();col.classList.add('drag-over');});
+    col.addEventListener('dragleave',()=>col.classList.remove('drag-over'));
+    col.addEventListener('drop',e=>{
+      e.preventDefault();col.classList.remove('drag-over');
+      if(!dragging)return;
+      const id=parseInt(dragging.dataset.id);
+      const newStage=col.dataset.stage;
+      const item=S.content.find(c=>c.id===id);
+      if(item&&item.stage!==newStage){const prev=item.stage;item.stage=newStage;triggerWorkflowRules(id,prev,newStage);render();}
+    });
+  });
+}
+
+// ─── CALENDAR ───
+function renderCalendar(){
+  const y=S.calDate.getFullYear(),m=S.calDate.getMonth();
+  const first=new Date(y,m,1).getDay();
+  const days=new Date(y,m+1,0).getDate();
+  const monthName=S.calDate.toLocaleString('en-GB',{month:'long',year:'numeric'});
+  const today=new Date();
+
+  // Build calendar events
+  const calEvents=[];
+  S.content.forEach(c=>{
+    if(c.publishDate){const d=new Date(c.publishDate);if(d.getMonth()===m&&d.getFullYear()===y)calEvents.push({day:d.getDate(),title:c.title,type:c.type,id:c.id});}
+    if(c.dueDate&&c.dueDate!==c.publishDate){const d=new Date(c.dueDate);if(d.getMonth()===m&&d.getFullYear()===y)calEvents.push({day:d.getDate(),title:'📋 '+c.title,type:'brief',id:c.id,isDue:true});}
+  });
+
+  let cells='';
+  const startDay=first===0?6:first-1;
+  for(let i=0;i<startDay;i++){const pd=new Date(y,m,-(startDay-1-i));cells+=`<div class="cal-day"><div class="cal-dn other">${pd.getDate()}</div></div>`;}
+  for(let d=1;d<=days;d++){
+    const isToday=d===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
+    const evs=calEvents.filter(e=>e.day===d);
+    cells+=`<div class="cal-day"><div class="cal-dn${isToday?' today':''}">${d}</div>
+      ${evs.map(e=>`<div class="cal-ev ce-${e.isDue?'news':e.type}" onclick="showDetail(${e.id})" title="${e.title}">${e.isDue?'📋 ':''}${e.title}</div>`).join('')}
+    </div>`;
+  }
+  const remaining=(7-((startDay+days)%7))%7;
+  for(let i=1;i<=remaining;i++)cells+=`<div class="cal-day"><div class="cal-dn other">${i}</div></div>`;
+
+  return `<div class="cal-wrap">
+    <div class="cal-hd">
+      <button class="btn btn-s" onclick="changeMonth(-1)">← Prev</button>
+      <div class="cal-month">${monthName}</div>
+      <button class="btn btn-s" onclick="changeMonth(1)">Next →</button>
+      <button class="btn btn-p" style="margin-left:auto" onclick="openModal('add-content')">+ Schedule Content</button>
+    </div>
+    <div class="cal-grid">
+      ${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`<div class="cal-dh">${d}</div>`).join('')}
+      ${cells}
+    </div>
+  </div>`;
+}
+
+function changeMonth(d){S.calDate=new Date(S.calDate.getFullYear(),S.calDate.getMonth()+d,1);render();}
+
+// ─── ALL CONTENT ───
+function renderContent(){
+  const types=['all','video','podcast','live','short','news','graphic','quote','interview','documentary'];
+  const filtered=S.filter==='all'?S.content:S.content.filter(c=>c.type===S.filter);
+  const sorted=[...filtered].sort((a,b)=>{const pi={'published':10,'scheduled':9,'review':8,'post_prod':7,'production':6,'pre_prod':5,'guest_outreach':4,'brief':3,'research':2,'idea':1};return (pi[b.stage]||0)-(pi[a.stage]||0);});
+
+  return `
+  <div class="sec-hd">
+    <div><div class="sec-title">All Content</div><div class="sec-sub">${S.content.length} items across all stages</div></div>
+    <button class="btn btn-p" onclick="openModal('add-content')">+ New Content</button>
+  </div>
+  <div class="filter-bar">
+    ${types.map(t=>`<div class="fc${S.filter===t?' active':''}" onclick="setFilter('${t}')">${t==='all'?'All':typeEmoji[t]+' '+t.charAt(0).toUpperCase()+t.slice(1)}</div>`).join('')}
+  </div>
+  <div class="card">
+    <div style="display:grid;grid-template-columns:1fr 120px 150px 110px 120px;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:11px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px">
+      <div>Title</div><div>Type</div><div>Stage</div><div>Due</div><div>Assigned</div>
+    </div>
+    ${sorted.map(c=>{
+      const st=stages.find(s=>s.id===c.stage);
+      return `<div class="cl-row" onclick="showDetail(${c.id})" style="display:grid;grid-template-columns:1fr 120px 150px 110px 120px;gap:10px;align-items:center">
+        <div class="cl-title">${c.title}</div>
+        <div>${tagHTML(c.type)}</div>
+        <div><span style="display:inline-flex;align-items:center;gap:5px;font-size:12px"><span class="k-dot ${st?.dot||''}" style="display:inline-block"></span>${st?.label||c.stage}</span></div>
+        <div class="cl-meta ${dueCls(c.dueDate)}">${fmtDate(c.dueDate)||'—'}</div>
+        <div style="display:flex;gap:-4px">${c.assignedTo.map(id=>avById(id,22)).join('')}</div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+function setFilter(f){S.filter=f;render();}
+
+// ─── GUESTS ───
+function renderGuests(){
+  const statusOrder={outreach:0,pending:1,confirmed:2,completed:3,declined:4};
+  const sorted=[...S.guests].sort((a,b)=>(statusOrder[a.status]||0)-(statusOrder[b.status]||0));
+  return `
+  <div class="sec-hd">
+    <div><div class="sec-title">Guests & Outreach</div><div class="sec-sub">${S.guests.length} contacts · ${S.guests.filter(g=>g.status==='confirmed').length} confirmed · ${S.guests.filter(g=>['outreach','pending'].includes(g.status)).length} awaiting reply</div></div>
+    <button class="btn btn-p" onclick="openModal('add-guest')">+ Add Guest</button>
+  </div>
+  <div class="filter-bar">
+    ${['all','outreach','pending','confirmed','completed','declined'].map(s=>`<div class="fc${S.gFilter===s||(!S.gFilter&&s==='all')?' active':''}" onclick="setGFilter('${s}')">${s.charAt(0).toUpperCase()+s.slice(1)}</div>`).join('')}
+  </div>
+  <div class="guests-grid">
+    ${sorted.filter(g=>!S.gFilter||S.gFilter==='all'||g.status===S.gFilter).map(g=>`
+    <div class="g-card" onclick="showGuestDetail(${g.id})">
+      <div class="g-hd">
+        <div class="g-av" style="background:${g.colors[0]};color:${g.colors[1]}">${g.name.split(' ').map(n=>n[0]).join('').slice(0,2)}</div>
+        <div>
+          <div class="g-name">${g.name}</div>
+          <div class="g-role">${g.role}</div>
+        </div>
+      </div>
+      <span class="g-status gs-${g.status}">● ${g.status.charAt(0).toUpperCase()+g.status.slice(1)}</span>
+      <div class="g-row">🎙️ <span style="color:var(--txt)">${g.topic}</span></div>
+      ${g.scheduledDate?`<div class="g-row">📅 <span>Scheduled: ${fmtDate(g.scheduledDate)}</span></div>`:''}
+      <div class="g-row">📧 Outreach: ${g.outreach}x · Last: ${g.lastContact}</div>
+      <div class="g-actions">
+        <button class="btn btn-s" style="font-size:12px;padding:5px 10px" onclick="event.stopPropagation();sendReminder(${g.id})">📧 Remind</button>
+        <button class="btn btn-p" style="font-size:12px;padding:5px 10px" onclick="event.stopPropagation();confirmGuest(${g.id})">✅ Confirm</button>
+      </div>
+    </div>
+    `).join('')}
+  </div>`;
+}
+
+function setGFilter(f){S.gFilter=f==='all'?null:f;render();}
+function sendReminder(id){const g=S.guests[id];g.outreach++;g.lastContact=new Date().toISOString().slice(0,10);showToast(`📧 Reminder sent to ${g.name.split(' ')[0]}`);render();}
+function confirmGuest(id){S.guests[id].status='confirmed';showToast(`✅ ${S.guests[id].name.split(' ')[0]} marked as confirmed`);render();}
+
+// ─── TEAM ───
+function renderTeam(){
+  return `
+  <div class="sec-hd">
+    <div><div class="sec-title">Team & Tasks</div><div class="sec-sub">${S.team.length} team members · Send tasks & track workload</div></div>
+    <button class="btn btn-p" onclick="openModal('send-task')">+ Assign Task</button>
+  </div>
+  <div class="team-list">
+    ${S.team.map((m,mi)=>`
+    <div class="tm-row">
+      ${av(m,40)}
+      <div class="tm-info">
+        <div class="tm-name">${m.name}</div>
+        <div class="tm-role">${m.role}</div>
+        <div class="wl-bar" style="width:80px;margin-top:8px"><div class="wl-fill ${m.workload>90?'wl-over':m.workload>75?'wl-warn':'wl-ok'}" style="width:${m.workload}%"></div></div>
+        <div class="wl-pct">${m.workload}% capacity</div>
+      </div>
+      <div class="tm-tasks">
+        ${m.tasks.map((t,ti)=>`
+        <div class="t-item${t.d?' done':''}" data-mi="${mi}" data-ti="${ti}">
+          <div class="t-check${t.d?' done':''}" onclick="toggleTask(${mi},${ti})">${t.d?'✓':''}</div>
+          <span class="t-lbl">${t.t}</span>
+          <span class="t-due${t.urgent?' urgent':''}">${t.due}</span>
+        </div>`).join('')}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        <button class="btn btn-s" style="font-size:12px" onclick="openModal('send-notif','${m.name}')">📣 Notify</button>
+        <button class="btn btn-s" style="font-size:12px" onclick="openModal('assign','${m.name}')">+ Task</button>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function toggleTask(mi,ti){S.team[mi].tasks[ti].d=!S.team[mi].tasks[ti].d;render();}
+
+// ─── NOTIFICATIONS ───
+function renderNotifications(){
+  const unread=S.notifications.filter(n=>!n.read).length;
+  return `
+  <div class="sec-hd">
+    <div><div class="sec-title">Notifications</div><div class="sec-sub">${unread} unread · Push tasks to team members</div></div>
+    <button class="btn btn-s" onclick="markAllRead()">Mark all read</button>
+  </div>
+  <div class="notif-composer">
+    <div class="comp-title">📣 Send Push Notification to Team</div>
+    <div style="font-size:12px;color:var(--txt2);margin-bottom:8px">Select recipients:</div>
+    <div class="team-chips">
+      <div class="tc${S.notifRecipients.includes('all')?' sel':''}" onclick="toggleRecipient('all')">📢 All Team</div>
+      ${S.team.map(m=>`<div class="tc${S.notifRecipients.includes(m.name)?' sel':''}" onclick="toggleRecipient('${m.name}')">${av(m)} ${m.name.split(' ')[0]}</div>`).join('')}
+    </div>
+    <input class="fi" id="notif-title-inp" placeholder="Notification title…" style="margin-bottom:8px">
+    <textarea class="fta" id="notif-body-inp" placeholder="Message body…" style="margin-bottom:10px"></textarea>
+    <div style="display:flex;gap:8px">
+      <select class="fs" id="notif-type-sel" style="width:auto">
+        <option value="task">📋 Task</option>
+        <option value="deadline">⏰ Deadline</option>
+        <option value="review">👁 Review Request</option>
+        <option value="publish">🚀 Publish Alert</option>
+        <option value="guest">🎤 Guest Update</option>
+      </select>
+      <button class="btn btn-p" onclick="sendNotif()">Send Notification →</button>
+    </div>
+  </div>
+  <div class="notif-list">
+    ${S.notifications.map((n,i)=>`
+    <div class="ni${n.read?'':' unread'}" onclick="markRead(${i})">
+      <div class="ni-ic" style="background:var(--bg4)">${n.icon}</div>
+      <div style="flex:1">
+        <div class="ni-title">${n.title}</div>
+        <div class="ni-body">${n.body}</div>
+        <div style="display:flex;gap:6px;margin-top:5px;flex-wrap:wrap">
+          ${n.target.map(t=>`<span style="font-size:11px;background:var(--bg4);padding:1px 7px;border-radius:4px;color:var(--txt2)">→ ${t}</span>`).join('')}
+          <span class="ni-time" style="margin-left:auto">${n.time}</span>
+        </div>
+      </div>
+      ${!n.read?'<div style="width:8px;height:8px;border-radius:50%;background:var(--acc);flex-shrink:0;margin-top:4px"></div>':''}
+    </div>`).join('')}
+  </div>`;
+}
+
+function toggleRecipient(name){
+  const i=S.notifRecipients.indexOf(name);
+  if(i>-1)S.notifRecipients.splice(i,1);else S.notifRecipients.push(name);
+  render();
+}
+
+function sendNotif(){
+  const title=document.getElementById('notif-title-inp')?.value||'';
+  const body=document.getElementById('notif-body-inp')?.value||'';
+  if(!title){showToast('⚠️ Please enter a notification title');return;}
+  S.notifications.unshift({id:Date.now(),read:false,type:'task',icon:'📣',title,body,time:'Just now',target:S.notifRecipients.length?[...S.notifRecipients]:['All Team']});
+  S.notifRecipients=[];
+  showToast('✅ Notification sent to team');
+  render();
+}
+
+function markRead(i){S.notifications[i].read=true;render();}
+function markAllRead(){S.notifications.forEach(n=>n.read=true);render();}
+
+// ─── REPURPOSE ───
+function renderRepurpose(){
+  const longform=S.content.filter(c=>['video','documentary','interview','live'].includes(c.type));
+  return `
+  <div class="sec-hd">
+    <div><div class="sec-title">Repurpose Hub ♻️</div><div class="sec-sub">Extract Shorts, Reels, Quote Cards, Clips & Blog posts from long-form content</div></div>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-hd"><div class="card-title">📐 Repurposing Output Guide</div></div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;text-align:center">
+      ${[['⚡','3–5 Shorts','YouTube Shorts\nTikTok\nInstagram Reels'],['💬','5–8 Quote Cards','Instagram\nTwitter\nWhatsApp'],['🎧','3–5 Audiograms','Podcast promo\nInstagram Stories'],['📝','1 Blog Article','Website\nLinkedIn\nEmail'],['📸','1 Carousel','Instagram\nLinkedIn']].map(([icon,label,sub])=>`
+      <div class="rep-card"><div class="rep-icon">${icon}</div><div class="rep-lbl">${label}</div><div class="rep-sub">${sub.replace(/\n/g,'\n')}</div></div>`).join('')}
+    </div>
+    <div style="margin-top:14px;padding:12px;background:var(--accL);border-radius:8px;border:1px solid var(--acc2);font-size:13px;color:var(--txt2)">
+      💡 <strong style="color:var(--txt)">From 1 long-form video, you can create 15–25 pieces of content</strong> across all platforms — saving 80% of production time.
+    </div>
+  </div>
+  <div class="sec-title" style="margin-bottom:14px;font-size:15px">Select source content to repurpose:</div>
+  ${longform.map(c=>`
+  <div class="card" style="margin-bottom:12px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+      ${tagHTML(c.type)}
+      <div style="font-size:14px;font-weight:600;flex:1">${c.title}</div>
+      <span style="font-size:12px;color:var(--txt2)">${stages.find(s=>s.id===c.stage)?.label||c.stage}</span>
+    </div>
+    <div style="font-size:12px;color:var(--txt2);margin-bottom:10px">Create derived content from this ${c.type}:</div>
+    <div class="rep-grid">
+      <div class="rep-card" onclick="createRepurpose(${c.id},'short')"><div class="rep-icon">⚡</div><div class="rep-lbl">Short / Reel</div><div class="rep-sub">60s cut</div></div>
+      <div class="rep-card" onclick="createRepurpose(${c.id},'quote')"><div class="rep-icon">💬</div><div class="rep-lbl">Quote Card</div><div class="rep-sub">Graphic</div></div>
+      <div class="rep-card" onclick="createRepurpose(${c.id},'podcast')"><div class="rep-icon">🎧</div><div class="rep-lbl">Audiogram</div><div class="rep-sub">Audio clip</div></div>
+      <div class="rep-card" onclick="createRepurpose(${c.id},'graphic')"><div class="rep-icon">📸</div><div class="rep-lbl">Carousel</div><div class="rep-sub">Multi-slide</div></div>
+    </div>
+  </div>`).join('')}`;
+}
+
+function createRepurpose(sourceId,type){
+  const src=S.content.find(c=>c.id===sourceId);
+  if(!src)return;
+  const newItem={id:Date.now(),title:`${src.title} — ${type.charAt(0).toUpperCase()+type.slice(1)} Cut`,type,stage:'brief',priority:'med',platforms:type==='short'?['TikTok','Instagram','YouTube Shorts']:['Instagram'],assignedTo:src.assignedTo.slice(0,1),dueDate:'',publishDate:'',description:`Repurposed from: "${src.title}"`,tags:[...src.tags,'Repurposed'],checklist:[{t:'Identify best moments',d:false},{t:'Edit / design',d:false},{t:'Add captions',d:false},{t:'Review',d:false},{t:'Schedule',d:false}],repurposedFrom:sourceId};
+  S.content.push(newItem);
+  showToast(`✅ Created ${type} from "${src.title.slice(0,30)}…" → Pipeline`);
+}
+
+// ─── ANALYTICS ───
+function renderAnalytics(){
+  const maxViews=Math.max(...S.analyticsData.views);
+  const maxSubs=Math.max(...S.analyticsData.subs);
+  return `
+  <div class="sec-hd">
+    <div><div class="sec-title">Analytics & Performance</div><div class="sec-sub">Across all platforms · Last 12 weeks</div></div>
+  </div>
+  <div class="an-grid">
+    <div class="card"><div class="card-hd"><div class="card-title">👁 Total Views</div><div style="font-size:11px;color:var(--acc)">+14.2% ↑</div></div><div class="stat-val">38,900</div><div style="font-size:12px;color:var(--txt2)">This week · Peak: 41,800</div>
+      <div class="mini-chart">${S.analyticsData.views.map(v=>`<div class="mb" style="height:${Math.round(v/maxViews*100)}%;background:var(--blueL)"></div>`).join('')}</div>
+    </div>
+    <div class="card"><div class="card-hd"><div class="card-title">⏱ Watch Time (hrs)</div><div style="font-size:11px;color:var(--acc)">+18.6% ↑</div></div><div class="stat-val">2,840</div><div style="font-size:12px;color:var(--txt2)">This week · Best: 3,020</div>
+      <div class="mini-chart">${S.analyticsData.watchTime.map(v=>`<div class="mb" style="height:${Math.round(v/Math.max(...S.analyticsData.watchTime)*100)}%;background:var(--purpleL)"></div>`).join('')}</div>
+    </div>
+    <div class="card"><div class="card-hd"><div class="card-title">👥 Subscribers</div><div style="font-size:11px;color:var(--acc)">+4.3% ↑</div></div><div class="stat-val">17,120</div><div style="font-size:12px;color:var(--txt2)">Total · +670 this week</div>
+      <div class="mini-chart">${S.analyticsData.subs.map(v=>`<div class="mb" style="height:${Math.round(v/maxSubs*100)}%;background:var(--accL)"></div>`).join('')}</div>
+    </div>
+  </div>
+  <div class="dash-grid dash-21" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">🏆 Top Performing Content</div></div>
+      ${S.analyticsData.topContent.map((c,i)=>`
+      <div class="perf-row">
+        <div style="font-size:12px;color:var(--txt3);width:16px">${i+1}</div>
+        ${tagHTML(c.type)}
+        <div class="perf-lbl">${c.title}</div>
+        <div class="perf-bar-bg"><div class="perf-bar" style="width:${Math.round(c.views/S.analyticsData.topContent[0].views*100)}%;background:var(--acc)"></div></div>
+        <div class="perf-val">${(c.views/1000).toFixed(1)}k</div>
+      </div>`).join('')}
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card">
+        <div class="card-hd"><div class="card-title">📱 By Platform</div></div>
+        ${S.analyticsData.byPlatform.map(p=>`<div class="perf-row"><div class="perf-lbl">${p.platform}</div><div class="perf-bar-bg"><div class="perf-bar" style="width:${p.pct}%;background:${p.color}"></div></div><div class="perf-val">${p.pct}%</div></div>`).join('')}
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">🎬 By Content Type</div></div>
+        ${S.analyticsData.byType.map(p=>`<div class="perf-row"><div class="perf-lbl">${p.type}</div><div class="perf-bar-bg"><div class="perf-bar" style="width:${p.pct}%;background:${p.color}"></div></div><div class="perf-val">${p.pct}%</div></div>`).join('')}
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">💡 Recommendations</div></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      ${[['📹','Double down on long-form video','Long-form drives 45% of your views. Increase cadence from 2→3 per month.','var(--redL)','var(--red)'],['⚡','Shorts are underleveraged','Only 15% of views from Shorts despite low production cost. Repurpose more.','var(--blueL)','var(--blue)'],['📅','Consistency drives growth','Your best subscriber weeks correlate with 3+ publishes. Maintain the schedule.','var(--accL)','var(--acc)']].map(([icon,title,body,bg,color])=>`
+      <div style="background:${bg};border:1px solid ${color};border-radius:8px;padding:14px">
+        <div style="font-size:18px;margin-bottom:6px">${icon}</div>
+        <div style="font-size:13px;font-weight:600;color:${color};margin-bottom:4px">${title}</div>
+        <div style="font-size:12px;color:var(--txt2)">${body}</div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ─── DETAIL PANEL ───
+function showDetail(id){
+  const c=S.content.find(x=>x.id===id);
+  if(!c)return;
+  const st=stages.find(s=>s.id===c.stage);
+  const done=c.checklist.filter(t=>t.d).length;
+  const pct=Math.round(done/c.checklist.length*100)||0;
+  document.getElementById('detail-body').innerHTML=`
+    <div style="margin-bottom:16px">${tagHTML(c.type)}</div>
+    <h2 style="font-size:18px;font-weight:700;margin-bottom:8px;line-height:1.3">${c.title}</h2>
+    <p style="font-size:13px;color:var(--txt2);line-height:1.6;margin-bottom:16px">${c.description}</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+      ${c.platforms.map(p=>`<span class="plat" style="font-size:12px;padding:3px 9px">${p}</span>`).join('')}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      <div style="background:var(--bg4);border-radius:8px;padding:12px"><div style="font-size:11px;color:var(--txt2);margin-bottom:4px">Due Date</div><div style="font-size:14px;font-weight:600;color:${dueCls(c.dueDate)==='overdue'?'var(--red)':dueCls(c.dueDate)==='soon'?'var(--gold)':'inherit'}">${fmtDate(c.dueDate)||'Not set'}</div></div>
+      <div style="background:var(--bg4);border-radius:8px;padding:12px"><div style="font-size:11px;color:var(--txt2);margin-bottom:4px">Publish Date</div><div style="font-size:14px;font-weight:600">${fmtDate(c.publishDate)||'Not set'}</div></div>
+    </div>
+    <div style="margin-bottom:16px">
+      <div style="font-size:12px;font-weight:600;color:var(--txt2);margin-bottom:8px">CURRENT STAGE</div>
+      <div class="dp-stage-row">
+        ${stages.map(s=>`<div class="dp-stage-btn${c.stage===s.id?' current':''}" onclick="moveStage(${c.id},'${s.id}')">${s.label}</div>`).join('')}
+      </div>
+    </div>
+    <div style="margin-bottom:16px">
+      <div style="font-size:12px;font-weight:600;color:var(--txt2);margin-bottom:6px">ASSIGNED TEAM</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${c.assignedTo.map(id=>S.team[id]?`<div style="display:flex;align-items:center;gap:6px;background:var(--bg4);padding:5px 10px;border-radius:20px;font-size:12px">${av(S.team[id])} ${S.team[id].name}</div>`:'').join('')}
+      </div>
+    </div>
+    <div style="margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="font-size:12px;font-weight:600;color:var(--txt2)">PRODUCTION CHECKLIST</div>
+        <div style="font-size:12px;color:var(--txt2)">${done}/${c.checklist.length} · ${pct}%</div>
+      </div>
+      <div class="progress-bg"><div class="progress-fill ${pct<40?'danger':pct<70?'warn':''}" style="width:${pct}%"></div></div>
+      <div class="checklist" style="margin-top:10px">
+        ${c.checklist.map((t,i)=>`<div class="chk-item"><input type="checkbox" ${t.d?'checked':''} onchange="toggleCheck(${c.id},${i},this.checked)"> ${t.t}</div>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+      <button class="btn btn-p" onclick="moveStageNext(${c.id})">→ Move to Next Stage</button>
+      <button class="btn btn-s" onclick="openModal('add-content','${c.stage}',${c.id})">✏️ Edit</button>
+    </div>`;
+  document.getElementById('detail-panel').classList.add('open');
+}
+
+function showGuestDetail(id){
+  const g=S.guests[id];
+  document.getElementById('detail-body').innerHTML=`
+    <div class="g-av" style="background:${g.colors[0]};color:${g.colors[1]};width:56px;height:56px;font-size:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-bottom:14px">${g.name.split(' ').map(n=>n[0]).join('').slice(0,2)}</div>
+    <h2 style="font-size:18px;font-weight:700;margin-bottom:4px">${g.name}</h2>
+    <div style="font-size:13px;color:var(--txt2);margin-bottom:14px">${g.role}</div>
+    <span class="g-status gs-${g.status}" style="margin-bottom:16px;display:inline-flex">● ${g.status.charAt(0).toUpperCase()+g.status.slice(1)}</span>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">
+      <div class="g-row">🎙️ Topic: <strong style="color:var(--txt)">${g.topic}</strong></div>
+      <div class="g-row">🧠 Expertise: <span>${g.expertise}</span></div>
+      <div class="g-row">📧 Email: <span>${g.email}</span></div>
+      <div class="g-row">📨 Outreach count: <strong style="color:var(--txt)">${g.outreach}x</strong></div>
+      <div class="g-row">📅 Last contact: <span>${g.lastContact}</span></div>
+      ${g.scheduledDate?`<div class="g-row">✅ Scheduled: <strong style="color:var(--acc)">${fmtDate(g.scheduledDate)}</strong></div>`:''}
+      <div style="background:var(--bg4);border-radius:8px;padding:12px;margin-top:4px"><div style="font-size:11px;color:var(--txt2);margin-bottom:4px">NOTES</div><div style="font-size:13px;line-height:1.6">${g.notes}</div></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+      <button class="btn btn-p" onclick="sendReminder(${g.id});closeDetail()">📧 Send Reminder</button>
+      <button class="btn btn-s" onclick="confirmGuest(${g.id});closeDetail()">✅ Mark Confirmed</button>
+    </div>`;
+  document.getElementById('detail-panel').classList.add('open');
+}
+
+function closeDetail(){document.getElementById('detail-panel').classList.remove('open');}
+
+function moveStage(id,newStage){const c=S.content.find(x=>x.id===id);if(c){const prev=c.stage;c.stage=newStage;triggerWorkflowRules(id,prev,newStage);showDetail(id);if(S.view==='pipeline'||S.view==='content')render();}}
+function moveStageNext(id){const c=S.content.find(x=>x.id===id);if(!c)return;const i=stageIdx[c.stage];if(i<stages.length-1){const prev=c.stage;c.stage=stages[i+1].id;triggerWorkflowRules(id,prev,c.stage);showDetail(id);if(['pipeline','content'].includes(S.view))render();showToast(`→ Moved to "${stages[i+1].label}"`);};}
+function toggleCheck(contentId,taskIdx,val){const c=S.content.find(x=>x.id===contentId);if(c){c.checklist[taskIdx].d=val;showDetail(contentId);}}
+
+// ─── WHATSAPP + WORKFLOW ENGINE ───
+function triggerWorkflowRules(contentId,fromStage,toStage){
+  const c=S.content.find(x=>x.id===contentId);
+  if(!c)return;
+  const matched=S.workflowRules.filter(r=>r.active&&r.fromStage===fromStage&&r.toStage===toStage&&(r.contentTypes.includes('all')||r.contentTypes.includes(c.type)));
+  matched.forEach(rule=>{
+    const msg=rule.message.replace(/\{\{title\}\}/g,c.title);
+    rule.notifyIds.forEach(tid=>{
+      const member=S.team[tid];
+      if(!member)return;
+      sendWhatsAppMessage(tid,msg,c.title,rule.name);
+    });
+    S.notifications.unshift({id:Date.now()+Math.random(),read:false,type:'task',icon:'⚙️',title:`Auto: ${rule.name}`,body:`Triggered for "${c.title}" · WhatsApp sent to ${rule.notifyIds.map(i=>S.team[i]?.name.split(' ')[0]).join(', ')}`,time:'Just now',target:rule.notifyIds.map(i=>S.team[i]?.name).filter(Boolean)});
+  });
+  if(matched.length)showToast(`⚙️ ${matched.length} workflow rule${matched.length>1?'s':''} fired — WhatsApp sent`);
+}
+
+function sendWhatsAppMessage(teamId,message,contentTitle,ruleName){
+  const m=S.team[teamId];
+  if(!m)return;
+  const log={id:Date.now()+Math.random(),to:m.name,phone:m.phone||'not set',message,contentTitle,ruleName,time:new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}),status:m.phone&&m.waKey?'sent':'no_creds'};
+  S.waLog.unshift(log);
+  if(m.phone&&m.waKey){
+    const encoded=encodeURIComponent(message);
+    fetch(`https://api.callmebot.com/whatsapp.php?phone=${m.phone}&text=${encoded}&apikey=${m.waKey}`,{mode:'no-cors'}).catch(()=>{});
+  }
+}
+
+// ─── RENDER WORKFLOW ───
+function renderWorkflow(){
+  const activeCount=S.workflowRules.filter(r=>r.active).length;
+  return `
+  <div class="sec-hd">
+    <div><div class="sec-title">Workflow Automation ⚙️</div><div class="sec-sub">${activeCount} of ${S.workflowRules.length} rules active · WhatsApp messages fire automatically when content moves stages</div></div>
+    <button class="btn btn-p" onclick="openModal('add-rule')">+ New Rule</button>
+  </div>
+
+  <div class="card" style="margin-bottom:18px;background:var(--accL);border-color:var(--acc2)">
+    <div style="display:flex;gap:12px;align-items:flex-start">
+      <div style="font-size:22px">💡</div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--acc);margin-bottom:4px">How it works</div>
+        <div style="font-size:13px;color:var(--txt2);line-height:1.6">When you drag a content card to a new stage (or click "Move to Next Stage"), any matching rules below fire automatically. Each rule sends a WhatsApp message to the specified team member(s) with the content title and instructions. Set up phone numbers first in <span style="color:var(--acc);cursor:pointer;text-decoration:underline" onclick="navigate('settings')">WhatsApp Setup →</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px">
+    ${S.workflowRules.map((r,ri)=>`
+    <div style="background:var(--bg3);border:1px solid ${r.active?'var(--border)':'var(--border)'};border-left:3px solid ${r.active?'var(--acc2)':'var(--border2)'};border-radius:10px;padding:16px 18px">
+      <div style="display:flex;align-items:flex-start;gap:14px">
+        <div style="margin-top:2px">
+          <div style="width:36px;height:20px;background:${r.active?'var(--acc2)':'var(--border2)'};border-radius:10px;cursor:pointer;transition:background .2s;position:relative;flex-shrink:0" onclick="toggleRule(${ri})">
+            <div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:2px;left:${r.active?'18px':'2px'};transition:left .2s"></div>
+          </div>
+        </div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+            <div style="font-size:14px;font-weight:600">${r.name}</div>
+            ${r.active?'<span style="font-size:10px;background:var(--accL);color:var(--acc);padding:1px 7px;border-radius:10px;font-weight:600">ACTIVE</span>':'<span style="font-size:10px;background:var(--bg4);color:var(--txt3);padding:1px 7px;border-radius:10px;font-weight:600">PAUSED</span>'}
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--txt2);margin-bottom:10px;flex-wrap:wrap">
+            <span style="background:var(--bg4);padding:2px 8px;border-radius:4px">${stages.find(s=>s.id===r.fromStage)?.label||r.fromStage}</span>
+            <span style="color:var(--acc)">→</span>
+            <span style="background:var(--bg4);padding:2px 8px;border-radius:4px">${stages.find(s=>s.id===r.toStage)?.label||r.toStage}</span>
+            <span style="color:var(--txt3)">·</span>
+            <span>Notify: <strong style="color:var(--txt)">${r.notifyIds.map(i=>S.team[i]?.name.split(' ')[0]).filter(Boolean).join(', ')}</strong></span>
+            <span style="color:var(--txt3)">·</span>
+            <span>Content: <strong style="color:var(--txt)">${r.contentTypes.includes('all')?'All types':r.contentTypes.join(', ')}</strong></span>
+          </div>
+          <div style="background:var(--bg4);border-radius:6px;padding:10px 12px;font-size:12px;color:var(--txt2);line-height:1.6;font-family:monospace;white-space:pre-wrap">${r.message}</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0">
+          <button class="btn btn-s" style="font-size:12px;padding:5px 10px" onclick="openModal('edit-rule',${ri})">✏️</button>
+          <button class="btn btn-s" style="font-size:12px;padding:5px 10px;color:var(--red)" onclick="deleteRule(${ri})">🗑</button>
+        </div>
+      </div>
+    </div>`).join('')}
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><div class="card-title">📨 WhatsApp Send Log</div><button class="btn btn-s" style="font-size:12px" onclick="S.waLog=[];render()">Clear</button></div>
+    ${S.waLog.length===0?'<div style="color:var(--txt2);font-size:13px;padding:8px 0">No messages sent yet. Move a content card to trigger a rule.</div>':
+    S.waLog.slice(0,20).map(l=>`
+    <div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)">
+      <div style="font-size:18px">${l.status==='sent'?'✅':'⚠️'}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:500">${l.to} <span style="color:var(--txt3);font-weight:400">· ${l.phone}</span></div>
+        <div style="font-size:12px;color:var(--txt2)">Rule: ${l.ruleName} · Content: ${l.contentTitle}</div>
+        ${l.status==='no_creds'?'<div style="font-size:11px;color:var(--gold);margin-top:2px">⚠️ No phone/API key set — message not sent. Add in WhatsApp Setup.</div>':''}
+      </div>
+      <div style="font-size:11px;color:var(--txt3)">${l.time}</div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function toggleRule(ri){S.workflowRules[ri].active=!S.workflowRules[ri].active;render();}
+function deleteRule(ri){if(confirm('Delete this rule?')){S.workflowRules.splice(ri,1);render();}}
+
+// ─── RENDER SETTINGS ───
+function renderSettings(){
+  return `
+  <div class="sec-hd">
+    <div><div class="sec-title">WhatsApp Setup 📱</div><div class="sec-sub">Add each team member's number and CallMeBot API key to enable automatic WhatsApp messages</div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:18px">
+    <div class="card-hd"><div class="card-title">📋 Setup Guide — 3 steps per person (takes 60 seconds)</div></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      ${[['1','Save the CallMeBot number','Add <strong>+34 644 83 07 37</strong> to your WhatsApp contacts (save it as "CallMeBot" or anything)'],['2','Send the activation message','Open WhatsApp, message that number exactly: <strong style="font-family:monospace">I allow callmebot to send me messages</strong>'],['3','Receive your API key','Within seconds you\'ll get a reply with your personal API key. Paste it below along with your number (include country code, no spaces e.g. +447911123456)']].map(([n,title,body])=>`
+      <div style="background:var(--bg4);border-radius:8px;padding:14px">
+        <div style="width:24px;height:24px;background:var(--acc2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-bottom:8px">${n}</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px">${title}</div>
+        <div style="font-size:12px;color:var(--txt2);line-height:1.5">${body}</div>
+      </div>`).join('')}
+    </div>
+    <div style="margin-top:12px;padding:10px 14px;background:var(--goldL);border:1px solid var(--gold);border-radius:6px;font-size:12px;color:var(--txt2)">
+      ⚠️ <strong style="color:var(--gold)">Free tier:</strong> CallMeBot is free. Each person only needs to do this setup once. Messages are sent from CallMeBot's number but contain your full custom message.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><div class="card-title">👥 Team WhatsApp Credentials</div></div>
+    <div style="display:flex;flex-direction:column;gap:0">
+      ${S.team.map((m,i)=>`
+      <div style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)">
+        ${av(m,36)}
+        <div style="width:160px;flex-shrink:0">
+          <div style="font-size:13px;font-weight:600">${m.name}</div>
+          <div style="font-size:11px;color:var(--txt2)">${m.role}</div>
+        </div>
+        <input class="fi" placeholder="+447911123456" value="${m.phone}" oninput="S.team[${i}].phone=this.value" style="flex:1;max-width:180px">
+        <input class="fi" placeholder="CallMeBot API key" value="${m.waKey}" oninput="S.team[${i}].waKey=this.value" style="flex:1;max-width:180px">
+        <button class="btn btn-s" style="font-size:12px;flex-shrink:0" onclick="testWhatsApp(${i})">📲 Test</button>
+        <div style="width:80px;text-align:right;font-size:11px;flex-shrink:0;color:${m.phone&&m.waKey?'var(--acc)':'var(--txt3)'}">
+          ${m.phone&&m.waKey?'✅ Ready':'⚪ Not set'}
+        </div>
+      </div>`).join('')}
+    </div>
+    <div style="margin-top:16px;display:flex;justify-content:flex-end">
+      <button class="btn btn-p" onclick="saveWASettings()">💾 Save Settings</button>
+    </div>
+  </div>`;
+}
+
+function testWhatsApp(i){
+  const m=S.team[i];
+  if(!m.phone||!m.waKey){showToast('⚠️ Enter phone number and API key first');return;}
+  const msg=encodeURIComponent(`👋 Hi ${m.name.split(' ')[0]}! This is a test message from The Pulse dashboard. Your WhatsApp notifications are working correctly ✅`);
+  fetch(`https://api.callmebot.com/whatsapp.php?phone=${m.phone}&text=${msg}&apikey=${m.waKey}`,{mode:'no-cors'}).catch(()=>{});
+  showToast(`📲 Test message sent to ${m.name.split(' ')[0]} — check their WhatsApp`);
+}
+
+function saveWASettings(){showToast('✅ WhatsApp settings saved');}
+
+// ─── RULE MODAL (wired into openModal below) ───
+function openRuleModal(ri){
+  const r=ri!=null?S.workflowRules[ri]:null;
+  const overlay=document.getElementById('modal-overlay');
+  document.getElementById('modal-body').innerHTML=`
+  <div class="modal-hd"><div class="modal-title">${r?'✏️ Edit Rule':'+ New Workflow Rule'}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+  <div class="fg"><label>Rule Name</label><input class="fi" id="r-name" value="${r?.name||''}" placeholder="e.g. Edit Done → Director Review"></div>
+  <div class="f-row">
+    <div class="fg"><label>When stage changes FROM</label><select class="fs" id="r-from">
+      ${stages.map(s=>`<option value="${s.id}" ${r?.fromStage===s.id?'selected':''}>${s.label}</option>`).join('')}
+    </select></div>
+    <div class="fg"><label>TO this stage</label><select class="fs" id="r-to">
+      ${stages.map(s=>`<option value="${s.id}" ${r?.toStage===s.id?'selected':''}>${s.label}</option>`).join('')}
+    </select></div>
+  </div>
+  <div class="fg"><label>Notify these team members (hold Ctrl/Cmd for multiple)</label>
+    <select class="fs" id="r-notify" multiple style="height:120px">
+      ${S.team.map((m,i)=>`<option value="${i}" ${r?.notifyIds.includes(i)?'selected':''}>${m.name} — ${m.role}</option>`).join('')}
+    </select>
+  </div>
+  <div class="fg"><label>Only for these content types (hold Ctrl/Cmd for multiple; select "All" for everything)</label>
+    <select class="fs" id="r-types" multiple style="height:100px">
+      <option value="all" ${r?.contentTypes.includes('all')?'selected':''}>All types</option>
+      ${Object.keys(typeEmoji).map(t=>`<option value="${t}" ${r?.contentTypes.includes(t)?'selected':''}>${typeEmoji[t]} ${t}</option>`).join('')}
+    </select>
+  </div>
+  <div class="fg"><label>WhatsApp Message (use {{title}} for the content name)</label>
+    <textarea class="fta" id="r-msg" style="height:110px;font-family:monospace">${r?.message||''}</textarea>
+  </div>
+  <div class="modal-ft">
+    <button class="btn btn-s" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-p" onclick="submitRule(${ri??'null'})">Save Rule →</button>
+  </div>`;
+  overlay.classList.add('open');
+}
+
+function submitRule(ri){
+  const name=document.getElementById('r-name').value.trim();
+  if(!name){showToast('⚠️ Rule name required');return;}
+  const notifyIds=[...document.getElementById('r-notify').selectedOptions].map(o=>parseInt(o.value));
+  const rawTypes=[...document.getElementById('r-types').selectedOptions].map(o=>o.value);
+  const contentTypes=rawTypes.includes('all')?['all']:rawTypes;
+  const rule={id:ri!=null?S.workflowRules[ri].id:Date.now(),active:true,name,fromStage:document.getElementById('r-from').value,toStage:document.getElementById('r-to').value,notifyIds,contentTypes,message:document.getElementById('r-msg').value};
+  if(ri!=null)S.workflowRules[ri]=rule;else S.workflowRules.push(rule);
+  closeModal();showToast('✅ Rule saved');render();
+}
+// ─── END RULE MODAL ───
+
+// ─── MODALS ───
+function openModal(type,arg1,arg2){
+  const overlay=document.getElementById('modal-overlay');
+  const body=document.getElementById('modal-body');
+  if(type==='add-content'||type==='quick-add'){
+    body.innerHTML=`
+    <div class="modal-hd"><div class="modal-title">+ New Content</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="fg"><label>Title *</label><input class="fi" id="m-title" placeholder="Content title…"></div>
+    <div class="f-row">
+      <div class="fg"><label>Type *</label><select class="fs" id="m-type">
+        ${Object.keys(typeEmoji).map(t=>`<option value="${t}">${typeEmoji[t]} ${t.charAt(0).toUpperCase()+t.slice(1)}</option>`).join('')}
+      </select></div>
+      <div class="fg"><label>Stage</label><select class="fs" id="m-stage">
+        ${stages.map(s=>`<option value="${s.id}" ${arg1===s.id?'selected':''}>${s.label}</option>`).join('')}
+      </select></div>
+    </div>
+    <div class="f-row">
+      <div class="fg"><label>Priority</label><select class="fs" id="m-pri"><option value="high">🔴 High</option><option value="med" selected>🟡 Medium</option><option value="low">⚪ Low</option></select></div>
+      <div class="fg"><label>Platforms</label><input class="fi" id="m-plat" placeholder="YouTube, Instagram…" value="YouTube"></div>
+    </div>
+    <div class="f-row">
+      <div class="fg"><label>Due Date</label><input class="fi" id="m-due" type="date"></div>
+      <div class="fg"><label>Publish Date</label><input class="fi" id="m-pub" type="date"></div>
+    </div>
+    <div class="fg"><label>Assign To</label><select class="fs" id="m-assign">
+      ${S.team.map((m,i)=>`<option value="${i}">${m.name}</option>`).join('')}
+    </select></div>
+    <div class="fg"><label>Description</label><textarea class="fta" id="m-desc" placeholder="Brief description…"></textarea></div>
+    <div class="modal-ft"><button class="btn btn-s" onclick="closeModal()">Cancel</button><button class="btn btn-p" onclick="submitContent()">Create Content →</button></div>`;
+  } else if(type==='add-guest'){
+    body.innerHTML=`
+    <div class="modal-hd"><div class="modal-title">🎤 Add Guest</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="f-row">
+      <div class="fg"><label>Full Name *</label><input class="fi" id="g-name" placeholder="Guest name…"></div>
+      <div class="fg"><label>Role / Title</label><input class="fi" id="g-role" placeholder="Scholar, Journalist…"></div>
+    </div>
+    <div class="f-row">
+      <div class="fg"><label>Email</label><input class="fi" id="g-email" type="email" placeholder="email@example.com"></div>
+      <div class="fg"><label>Status</label><select class="fs" id="g-status"><option value="outreach">Outreach Sent</option><option value="pending">Pending Reply</option><option value="confirmed">Confirmed</option></select></div>
+    </div>
+    <div class="fg"><label>Topic / Episode</label><input class="fi" id="g-topic" placeholder="Proposed topic…"></div>
+    <div class="fg"><label>Expertise Areas</label><input class="fi" id="g-exp" placeholder="Theology, Politics…"></div>
+    <div class="fg"><label>Notes</label><textarea class="fta" id="g-notes" placeholder="Any notes on this guest…"></textarea></div>
+    <div class="modal-ft"><button class="btn btn-s" onclick="closeModal()">Cancel</button><button class="btn btn-p" onclick="submitGuest()">Add Guest →</button></div>`;
+  } else if(type==='add-rule'){
+    openRuleModal(null); return;
+  } else if(type==='edit-rule'){
+    openRuleModal(parseInt(arg1)); return;
+  } else if(type==='send-notif'||type==='send-task'){
+    body.innerHTML=`
+    <div class="modal-hd"><div class="modal-title">📣 ${type==='send-task'?'Assign Task':'Send Notification'}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="fg"><label>Recipient</label><select class="fs" id="sn-to">
+      <option value="All Team">All Team</option>
+      ${S.team.map(m=>`<option value="${m.name}" ${m.name===arg1?'selected':''}>${m.name}</option>`).join('')}
+    </select></div>
+    <div class="fg"><label>Title *</label><input class="fi" id="sn-title" placeholder="${type==='send-task'?'Task name…':'Notification title…'}"></div>
+    <div class="fg"><label>Message</label><textarea class="fta" id="sn-body" placeholder="Details…"></textarea></div>
+    <div class="fg"><label>Type</label><select class="fs" id="sn-type"><option value="task">📋 Task</option><option value="deadline">⏰ Deadline</option><option value="review">👁 Review</option><option value="publish">🚀 Publish</option></select></div>
+    <div class="modal-ft"><button class="btn btn-s" onclick="closeModal()">Cancel</button><button class="btn btn-p" onclick="quickSendNotif()">Send →</button></div>`;
+  }
+  overlay.classList.add('open');
+}
+
+function submitContent(){
+  const title=document.getElementById('m-title').value.trim();
+  if(!title){showToast('⚠️ Title is required');return;}
+  S.content.push({id:Date.now(),title,type:document.getElementById('m-type').value,stage:document.getElementById('m-stage').value,priority:document.getElementById('m-pri').value,platforms:document.getElementById('m-plat').value.split(',').map(p=>p.trim()).filter(Boolean)||['YouTube'],assignedTo:[parseInt(document.getElementById('m-assign').value)],dueDate:document.getElementById('m-due').value,publishDate:document.getElementById('m-pub').value,description:document.getElementById('m-desc').value,tags:[],checklist:[{t:'Draft brief',d:false},{t:'Assign team',d:false},{t:'Production',d:false},{t:'Edit & review',d:false},{t:'Publish',d:false}]});
+  closeModal();showToast('✅ Content created and added to pipeline');render();
+}
+
+function submitGuest(){
+  const name=document.getElementById('g-name').value.trim();
+  if(!name){showToast('⚠️ Name is required');return;}
+  const colors=[['#1a7f37','#fff'],['#388bfd','#fff'],['#a371f7','#fff'],['#d29922','#fff'],['#2dd4bf','#fff'],['#f0883e','#fff'],['#f85149','#fff']][Math.floor(Math.random()*7)];
+  S.guests.push({id:S.guests.length,name,role:document.getElementById('g-role').value,expertise:document.getElementById('g-exp').value,status:document.getElementById('g-status').value,email:document.getElementById('g-email').value,outreach:1,lastContact:new Date().toISOString().slice(0,10),scheduledDate:'',notes:document.getElementById('g-notes').value,colors,topic:document.getElementById('g-topic').value});
+  closeModal();showToast('✅ Guest added');render();
+}
+
+function quickSendNotif(){
+  const title=document.getElementById('sn-title')?.value;
+  const body=document.getElementById('sn-body')?.value||'';
+  if(!title){showToast('⚠️ Title required');return;}
+  const to=document.getElementById('sn-to')?.value||'All Team';
+  const icons={task:'📋',deadline:'⏰',review:'👁',publish:'🚀',guest:'🎤'};
+  const type=document.getElementById('sn-type')?.value||'task';
+  S.notifications.unshift({id:Date.now(),read:false,type,icon:icons[type]||'📣',title,body,time:'Just now',target:[to]});
+  closeModal();showToast(`✅ Sent to ${to}`);
+}
+
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');}
+function closeModalOutside(e){if(e.target===document.getElementById('modal-overlay'))closeModal();}
+
+// ─── TOAST ───
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 18px;font-size:13px;font-weight:500;z-index:9999;transition:opacity .3s;box-shadow:0 8px 24px rgba(0,0,0,.4)';document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity='1';
+  clearTimeout(t._timer);t._timer=setTimeout(()=>{t.style.opacity='0';},2800);
+}
+
+// ─── EVENT DELEGATION ───
+document.querySelectorAll('.nav-item[data-view]').forEach(el=>{
+  el.addEventListener('click',()=>navigate(el.dataset.view));
+});
+document.getElementById('global-search').addEventListener('input',e=>{
+  const q=e.target.value.toLowerCase();
+  if(!q)return;
+  const match=S.content.find(c=>c.title.toLowerCase().includes(q));
+  if(match)showDetail(match.id);
+});
+
+// ─── INIT ───
+render();
+</script>
+</body>
+</html>
